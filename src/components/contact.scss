@@ -1,0 +1,30 @@
+.contact-me-container {
+    display: flex;
+    flex-direction: row;
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+    background-color: gray;
+    padding: 5px 0 ;
+    z-index: 900;
+}
+
+.vertical-line-scroll div{
+    white-space: nowrap;
+    color: white;
+    font-size: 18px;
+    text-transform: uppercase;
+    animation: animate 12s linear infinite;
+}
+
+@keyframes animate
+{
+    0%
+    {
+        transform: translateX(0);
+    }
+    100%
+    {
+        transform: translateX(-100%);
+    }
+}

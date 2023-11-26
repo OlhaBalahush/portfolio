@@ -1,0 +1,30 @@
+.page {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    font-size: 36px;
+    margin: 0 100px;
+    box-sizing: border-box;
+    max-width: calc(100vw - 10%);
+}
+
+.page-height {
+    height: 100vh;
+}
+
+.about-text {
+    font-size: 36px;
+}
+
+.additional-text {
+    font-size: 16px;
+}
+
+.right-text {
+    justify-content: flex-end;
+    text-align: right;
+}
+
+.scroll-visibility {
+    width: 35%;
+}

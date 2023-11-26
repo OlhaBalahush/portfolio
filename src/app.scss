@@ -1,0 +1,60 @@
+.App {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: white;
+    flex-direction: column;
+    /* Adjusted: Flex-direction set to column */
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.title {
+    font-size: 128px;
+    margin: 0;
+}
+
+.about-text {
+    font-size: 36px;
+}
+
+.additional-text {
+    font-size: 16px;
+}
+
+.cursor {
+    background-color: black;
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
+.parallax-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    /* Allow elements to take up available space */
+}
+
+.to-page-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+}
+
+.about-character{
+    z-index: 1;
+    margin: 0 45%;
+    width: 0;
+}

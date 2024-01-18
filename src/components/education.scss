@@ -1,0 +1,70 @@
+.rows-page {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.education-box {
+    border-top: 1px solid var(--my-styles-text-color, #000);
+    height: 100px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    overflow: hidden; // Added to hide the content moving out
+    position: relative; // Needed for absolute positioning of children
+}
+
+.educations-container {
+    display: flex;
+    width: 100%;
+    border-style: none;
+    gap: 0;
+    flex-direction: column;
+}
+
+.education-content {
+    transition: transform 0.5s ease;
+    position: absolute; // Changed from static to absolute
+    top: 0;
+    left: 0;
+    right: 0; // Ensure full width coverage
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+
+    .education-text,
+    .education-date {
+        align-items: flex-start;
+    }
+
+    .education-date {
+        text-transform: uppercase;
+        height: 100%;
+    }
+}
+
+.education-box .cloned {
+    transform: translateY(100%);
+    color: var(--color-2);
+}
+
+.education-box.hovered .education-content {
+    transform: translateY(-100%); // Move up when hovered
+}
+
+.education-box.hovered .cloned {
+    transform: translateY(0); // Move into place when hovered
+}
+
+
+.first {
+    margin-top: 100px;
+}
+
+.last {
+    border-bottom: 1px solid var(--my-styles-text-color, #000);
+}

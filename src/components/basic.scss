@@ -1,11 +1,27 @@
+:root {
+    --back-color: #ffffff;
+    --color-1: #c5c5c5;
+    --color-2: #838383;
+    --color-3: #3b3b3b;
+    --text-color: #000000;
+
+    --text-font: Arial, Helvetica, sans-serif;
+    --title-text-size: 2em;
+    --main-text-size: 1.5em;
+    --additional-text-size: 0.75em;
+}
+
+
+
 .page {
     display: flex;
     align-items: center;
     width: 100%;
-    font-size: 36px;
+    font-size: var(--main-text-size);
     margin: 0 100px;
     box-sizing: border-box;
     max-width: calc(100vw - 10%);
+    font-family:Arial, Helvetica, sans-serif;
 }
 
 .page-height {
@@ -13,11 +29,11 @@
 }
 
 .about-text {
-    font-size: 36px;
+    font-size: var(--main-text-size);
 }
 
 .additional-text {
-    font-size: 16px;
+    font-size: var(--additional-text-size);
 }
 
 .right-text {

@@ -1,0 +1,48 @@
+.h-scroll-box {
+    margin-top: 100px;
+    height: 200px;
+    width: 100%;
+    // border: solid;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 50px;
+
+    // vertical scrolling
+    overflow-x: auto;
+    overflow-y: hidden;
+    white-space: nowrap;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+.scrollable-item {
+    min-width: 100px; 
+}
+
+.h-scroll-box {
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+// .vertical-line-scroll div{
+//     white-space: nowrap;
+//     color: white;
+//     font-size: 18px;
+//     text-transform: uppercase;
+//     animation: animate 25s linear infinite;
+// }
+
+// @keyframes animate
+// {
+//     0%
+//     {
+//         transform: translateX(0);
+//     }
+//     100%
+//     {
+//         transform: translateX(-2350%);
+//     }
+// }

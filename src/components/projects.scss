@@ -1,0 +1,57 @@
+
+// // v1
+// .projects-container {
+//     display: flex;
+//     overflow-x: auto;
+//     scrollbar-width: none; /* For Firefox */
+//     -ms-overflow-style: none;  /* For IE and Edge */
+//     width: 100%;
+// }
+
+// .projects-container::-webkit-scrollbar {
+//     display: none; /* For WebKit Browsers */
+// }
+
+// .projects-container.sticky {
+//     position: sticky;
+//     top: 0; /* Adjust this based on your header/nav bar height if any */
+// }
+// .project-box {
+//     flex: none;
+//     background-color: black;
+//     width: 300px; /* Adjust based on your content */
+//     height: 700px; /* Adjust based on your content */
+//     margin-right: 10px;
+//     scroll-snap-align: start;
+//     color: white;
+// }
+
+
+// v2
+// .projects-container {
+    // margin-top: 100px;
+    // height: 100%;
+    // width: 100%;
+    // border: solid;
+
+    // display: flex;
+    // flex-direction: row;
+    // align-items: center;
+    // gap: 50px;
+
+    // // vertical scrolling
+    // overflow-x: auto;
+    // overflow-y: hidden;
+    // white-space: nowrap;
+
+    // -webkit-overflow-scrolling: touch;
+// }
+
+// v3
+
+.projects-container {
+    margin-top: 100px;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}

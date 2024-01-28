@@ -38,7 +38,7 @@ const ProjectsComponent: React.FC<ProjectsComponentProps> = ({ textEnter, textLe
                 <ProjectComponent 
                     textEnter={textEnter} textLeave={textLeave} linkEnter={linkEnter}
                     name='04_Bomberman' 
-                    description={'description'} 
+                    description={'An multiplayer game based on Bomberman.'} 
                     link={'https://github.com/OlhaBalahush/bomberman'} 
                     isRight={true}/>
                 {/* <ProjectComponent 

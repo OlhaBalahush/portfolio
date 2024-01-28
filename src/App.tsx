@@ -93,7 +93,7 @@ function App() {
         )} </motion.div>
       <ContactMeComponent />
       <div className='App'>
-        <Parallax pages={8} ref={ref}>
+        <Parallax pages={9} ref={ref}>
           <ParallaxLayer
             offset={0}
             speed={0.5}
@@ -193,36 +193,36 @@ function App() {
           </ParallaxLayer>
 
           <ParallaxLayer
-            offset={4}
-            speed={0.5}
+            offset={4.1}
+            speed={0.25}
             factor={4}>
             <EducationComponent textEnter={textEnter} textLeave={textLeave} />
           </ParallaxLayer>
 
           <ParallaxLayer
-            offset={4.9}
-            speed={0.25}
+            offset={5}
+            speed={0.75}
             factor={4}>
             <SkillsComponent textEnter={textEnter} iconEnter={iconEnter} textLeave={textLeave} />
           </ParallaxLayer>
 
           <ParallaxLayer
-            offset={5.5}
-            speed={0.5}
+            offset={5.9}
+            speed={0.4}
             factor={4}>
             <ProjectsComponent textEnter={textEnter} linkEnter={linkEnter} textLeave={textLeave} />
           </ParallaxLayer>
 
           <ParallaxLayer
-            offset={7}
+            offset={8}
             speed={1}
             factor={4}>
             <ByeComponent textEnter={textEnter} textLeave={textLeave} />
           </ParallaxLayer>
 
           <ParallaxLayer
-            offset={7.7}
-            speed={1.5}>
+            offset={8.65}
+            speed={1.25}>
             <svg
               className='to-page-center'
               width="38" height="103" viewBox="0 0 38 103" fill="none" xmlns="http://www.w3.org/2000/svg">

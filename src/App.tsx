@@ -91,7 +91,7 @@ function App() {
         {cursorVariant === 'link' && (
           <span>Click Here</span> // Text displayed when in 'link' state
         )} </motion.div>
-      <ContactMeComponent />
+      <ContactMeComponent linkEnter={linkEnter} textLeave={textLeave} />
       <div className='App'>
         <Parallax pages={9} ref={ref}>
           <ParallaxLayer

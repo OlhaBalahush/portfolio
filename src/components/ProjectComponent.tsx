@@ -11,10 +11,11 @@ interface ProjectComponentProps {
     name: String;
     description: String;
     link: String;
+    pictureLink: String;
     isRight: Boolean;
 }
 
-const ProjectComponent: React.FC<ProjectComponentProps> = ({ textEnter, textLeave, linkEnter, name, description, link, isRight }) => {
+const ProjectComponent: React.FC<ProjectComponentProps> = ({ textEnter, textLeave, linkEnter, name, description, link, pictureLink, isRight }) => {
 
     return (
         <div className='project-container'>
@@ -29,13 +30,13 @@ const ProjectComponent: React.FC<ProjectComponentProps> = ({ textEnter, textLeav
                         <div className='line-circle'></div>
                     </div>
                     <a className="project-content" href={`${link}`} onMouseEnter={linkEnter} onMouseLeave={textLeave} >
-                        {/* here'll be content */}
+                        <img src={`${pictureLink}`}></img>
                     </a>
                 </>
             ) : (
                 <>
                     <a className="project-content" href={`${link}`} onMouseEnter={linkEnter} onMouseLeave={textLeave}>
-                        {/* here'll be content */}
+                        <img src={`${pictureLink}`}></img>
                     </a>
                     <div className='line'>
                         <div className='line-circle' ></div>

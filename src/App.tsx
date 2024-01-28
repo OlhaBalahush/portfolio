@@ -195,14 +195,16 @@ function App() {
           <ParallaxLayer
             offset={4.1}
             speed={0.25}
-            factor={4}>
+            factor={4}
+            onClick={() => ref.current?.scrollTo(5)}>
             <EducationComponent textEnter={textEnter} textLeave={textLeave} />
           </ParallaxLayer>
 
           <ParallaxLayer
             offset={5}
             speed={0.75}
-            factor={4}>
+            factor={4}
+            onClick={() => ref.current?.scrollTo(5.7)}>
             <SkillsComponent textEnter={textEnter} iconEnter={iconEnter} textLeave={textLeave} />
           </ParallaxLayer>
 

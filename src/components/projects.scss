@@ -55,3 +55,9 @@
     flex-direction: column;
     width: 100%;
 }
+
+@media (max-width: 900px) {
+    .projects-container{
+        margin-top: 0;
+    }
+}

@@ -57,8 +57,20 @@
 }
 
 .contact-me-title {
-    font-size: var(--title-text-size);
     margin: 10px 0px;
+}
+
+.contact-t {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.close-btn {
+    background-color: transparent;
+    border-style: none;
 }
 
 .links-container {

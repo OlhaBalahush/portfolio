@@ -32,11 +32,11 @@ const EducationComponent: React.FC<EducationComponentProps> = ({ textEnter, text
                         className={`education-box ${i === hoveredIndex ? 'hovered' : ''} ${i === 0 ? 'first' : ''} ${i === educationData.length - 1 ? 'last' : ''}`}
                     >
                         <div className='education-content'>
-                            <div className='education-text'>{title[0]}</div>
-                            <div className='education-date'>{title[1]}</div>
+                            <div className='education-text main-text'>{title[0]}</div>
+                            <div className='education-date main-text'>{title[1]}</div>
                         </div>
                         <div className='education-content cloned'>
-                            <div className='education-text'>{title[2]}</div>
+                            <div className='education-text main-text'>{title[2]}</div>
                             {/* <div className='education-date'>{title[1]}</div> */}
                         </div>
                     </div>

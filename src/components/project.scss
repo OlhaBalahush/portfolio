@@ -64,3 +64,43 @@
     align-items: flex-end;
     text-align: end;
 }
+
+.pr-name {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (max-width: 900px) {
+    .project-container {
+        flex-direction: column;
+    }
+
+    .line {
+        display: none;
+    }
+
+    .is-right {
+        text-align: start;
+    }
+
+    .project-content,
+    .project-description {
+        width: 100%;
+        min-width: 0;
+        height: auto;
+    }
+
+    .pr-name {
+        flex-direction: row;
+        align-items: center;
+        gap: 20px;
+
+        margin-top: -25px;
+        z-index: 1000;
+    }
+
+    .pr-num {
+        margin: 0;
+        font-size: var(--big-title-font-size);
+    }
+}

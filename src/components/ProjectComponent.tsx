@@ -22,9 +22,11 @@ const ProjectComponent: React.FC<ProjectComponentProps> = ({ textEnter, textLeav
             {isRight ? (
                 <>
                     <div className='project-description is-right'>
-                        <h1 onMouseEnter={textEnter} onMouseLeave={textLeave}>{name.split('_')[0]}</h1>
-                        <h2 onMouseEnter={textEnter} onMouseLeave={textLeave}>{name.split('_')[1]}</h2>
-                        <p onMouseEnter={textEnter} onMouseLeave={textLeave}>{description}</p>
+                        <div className='pr-name'>
+                            <h1 className='pr-num' onMouseEnter={textEnter} onMouseLeave={textLeave}>{name.split('_')[0]}</h1>
+                            <h2 onMouseEnter={textEnter} onMouseLeave={textLeave}>{name.split('_')[1]}</h2>
+                        </div>
+                        <p className='main-text' onMouseEnter={textEnter} onMouseLeave={textLeave}>{description}</p>
                     </div>
                     <div className='line'>
                         <div className='line-circle'></div>
@@ -42,9 +44,11 @@ const ProjectComponent: React.FC<ProjectComponentProps> = ({ textEnter, textLeav
                         <div className='line-circle' ></div>
                     </div>
                     <div className='project-description'>
-                        <h1 onMouseEnter={textEnter} onMouseLeave={textLeave}>{name.split('_')[0]}</h1>
-                        <h2 onMouseEnter={textEnter} onMouseLeave={textLeave}>{name.split('_')[1]}</h2>
-                        <p onMouseEnter={textEnter} onMouseLeave={textLeave}>{description}</p>
+                        <div className='pr-name'>
+                            <h1 className='pr-num' onMouseEnter={textEnter} onMouseLeave={textLeave}>{name.split('_')[0]}</h1>
+                            <h2 onMouseEnter={textEnter} onMouseLeave={textLeave}>{name.split('_')[1]}</h2>
+                        </div>
+                        <p className='main-text' onMouseEnter={textEnter} onMouseLeave={textLeave}>{description}</p>
                     </div>
                 </>
             )}

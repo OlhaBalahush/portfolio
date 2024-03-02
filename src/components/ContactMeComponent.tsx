@@ -27,10 +27,10 @@ const ContactMeComponent: React.FC<ContactMeComponentProps> = ({ textLeave, link
       <div className={`contact-me-container ${isPaused ? 'paused' : ''}`}
         onClick={ClickOnContactMe}
         onMouseEnter={isClicked ? () => { } : linkEnter} onMouseLeave={textLeave}>
-        <div className='scrolling-text'>
+        <div className='scrolling-text main-text'>
           contact me - contact me - contact me - contact me - contact me - contact me - contact me - contact me - contact me - contact me - contact me - contact me - contact me - contact me - contact me - contact me -
         </div>
-        <div className='scrolling-text'>
+        <div className='scrolling-text main-text'>
           contact me - contact me - contact me - contact me - contact me - contact me - contact me - contact me - contact me - contact me - contact me - contact me - contact me - contact me - contact me - contact me -
         </div>
       </div>

@@ -174,7 +174,7 @@ function App() {
 
           <ParallaxLayer
             style={{ width: 'auto' }}
-            sticky={{ start: 0.8, end: 2.94 }}
+            sticky={{ start: 0.8, end: 2.93 }}
             className='parallax-page about-character'>
             <div className='sun-container'>
               <img

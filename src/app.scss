@@ -15,7 +15,7 @@
 }
 
 .sun-container {
-    height: 25%;
+    height: 30%;
     // width: 20%;
     // background-color: red;
     
@@ -77,6 +77,14 @@
     .title{
         font-size: var(--big-title-font-size-resp-m);
     }
+
+    .cursor {
+        display: none;
+    }
+    
+    .sun-container {
+        height: 20%;
+    }
 }
 
 @media (max-width: 900px) {
@@ -86,5 +94,9 @@
 
     .arrow {
         height: 50px;
+    }
+
+    .sun-container {
+        height: 10%;
     }
 }

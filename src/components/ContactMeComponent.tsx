@@ -14,7 +14,6 @@ const ContactMeComponent: React.FC<ContactMeComponentProps> = ({ textLeave, link
   const ClickOnContactMe = () => {
     setIsClicked(true);
     setIsPaused(true);
-    console.log('hello');
   }
 
   const handleMouseLeave = () => {

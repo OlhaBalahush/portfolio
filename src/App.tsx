@@ -54,7 +54,7 @@ function App() {
       x: mousePosition.x - 50,
       y: mousePosition.y - 50,
       // mixBlendMode: "difference"
-      display: 'flex',
+      display: window.innerWidth <= 1048 ? 'none' : 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: '50%',
@@ -68,9 +68,9 @@ function App() {
       y: mousePosition.y - 25, // adjust for the new size
       backgroundColor: 'rgba(0, 0, 0, 0.7)', // semi-transparent background
       color: 'white', // text color
+      display: window.innerWidth <= 1048 ? 'none' : 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      display: 'flex',
       borderRadius: '50%', // optional, for rounded corners
       // Add any additional styling as needed
     }
@@ -198,7 +198,7 @@ function App() {
             offset={4.1}
             speed={0.25}
             factor={4}
-            onClick={() => ref.current?.scrollTo(5)}>
+            >
             <EducationComponent textEnter={textEnter} textLeave={textLeave} />
           </ParallaxLayer>
 

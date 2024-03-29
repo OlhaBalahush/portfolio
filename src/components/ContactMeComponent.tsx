@@ -46,7 +46,7 @@ const ContactMeComponent: React.FC<ContactMeComponentProps> = ({ textLeave, link
         <div className='links-container'>
           <a onMouseEnter={linkEnter} onMouseLeave={textLeave} className='link main-text' href='https://www.linkedin.com/in/olha-balahush-821811227/'>LinkedIn</a>
           <a onMouseEnter={linkEnter} onMouseLeave={textLeave} className='link main-text' href='https://github.com/OlhaBalahush'>Github</a>
-          <a onMouseEnter={linkEnter} onMouseLeave={textLeave} className='link main-text' href='https://www.behance.net/16dff87d'>Behance</a>
+          <a onMouseEnter={linkEnter} onMouseLeave={textLeave} className='link main-text' href='https://www.behance.net/olha-balahush'>Behance</a>
         </div>
       </div>
     </div>

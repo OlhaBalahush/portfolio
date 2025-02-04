@@ -9,7 +9,7 @@ interface EducationComponentProps {
 
 const EducationComponent: React.FC<EducationComponentProps> = ({ textEnter, textLeave }) => {
     const educationData = [
-        ['KPI', 'sep 2020 - may 2024', 'Software engineering'],
+        ['KPI', 'sep 2020 - jun 2024', 'Software engineering'],
         ['kood/Johvi', 'nov 2022 - nov 2024', 'Software development'],
         ['Course UX design Google', 'oct 2023 - jan 2024', 'UX design'],
         ['Computer academy', 'sep 2017 - may 2020', 'Computer science']

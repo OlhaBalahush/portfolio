@@ -2,10 +2,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    height: calc(100vh - 7rem);
     background-color: white;
     flex-direction: column;
-    /* Adjusted: Flex-direction set to column */
 }
 
 .container {
@@ -70,6 +69,244 @@
     align-items: center;
     width: 100%;
     margin: 0;
+}
+
+.pic-container {
+    width: 100%;
+    min-width: 0;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    margin: 1rem 0;
+}
+
+.prev {
+    max-height: 30rem;
+}
+
+.full {
+    margin-left: -20rem;
+    width: 100vw !important;
+}
+
+.btns-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+button{
+    border-style: none;
+    background-color: gray;
+    color: white;
+    border-radius: 1rem;
+    padding: 0.5rem;
+
+}
+button:first-child{
+    margin: 0 0;
+}
+
+.pic-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+}
+
+
+.horizontal-line {
+    width: 100%;
+    background: gray;
+    height: 1px;
+}
+
+.navs-container {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 5rem;
+    justify-content: space-between;
+    padding: 0rem 2.5rem;
+    height: 50px;
+
+    /* Glassmorphism background */
+    background: rgba(255, 255, 255, 0.15); /* semi-transparent */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); /* for Safari support */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* subtle border */
+    box-shadow: 0 2px 30px rgba(0, 0, 0, 0.05);
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+
+    visibility: hidden;
+    animation: showHeader 1s ease-out forwards;
+    animation-delay: 3.5s;
+}
+
+h1 {
+    font-size: var(--big-title-font-size);
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+h2 {
+    font-size: 3rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+h3 {
+    font-size: 2rem;
+}
+
+h4 {
+    font-size: 1.75rem;
+}
+
+h5 {
+    font-size: 1.75rem;
+    margin: 1.5rem 0;
+    color: gray;
+}
+
+h6 {
+    font-size: 1.25rem;
+    margin: 1rem 0;
+}
+
+p, span, ul, button {
+    font-size: 1rem;
+}
+
+.row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 15% 1% 84%;
+    gap: 1rem;
+    align-items: start;
+    margin-bottom: 1.5rem;
+}
+
+.first-line, .second-line, .third-line {
+    opacity: 0;
+    //transform: translateX(-50px);
+    transition: all 0.6s ease-out;
+}
+
+.first-line {
+    animation: slideInLeft 1s ease-out forwards;
+    animation-delay: 0.5s;
+}
+
+.second-line {
+    animation: slideInLeft 1s ease-out forwards;
+    animation-delay: 1.5s;
+}
+
+.third-line {
+    margin: 1rem 0 ;
+    animation: fadeIn 1.5s ease-out forwards;
+    animation-delay: 3s;
+}
+
+.first-arrow {
+    opacity: 0;
+    animation: slideInDown 1s ease-out forwards;
+    animation-delay: 5s;
+}
+.span-btn {
+    position: relative;
+    /* Optional styling */
+    color: #333;
+    text-decoration: none; /* so we can control underline manually */
+    font-size: 1.1rem;
+    padding: 0.2rem 0; /* some space for the underline */
+}
+
+/* Create the "underline" as a pseudo-element */
+.span-btn::after {
+    content: "";
+    position: absolute;
+    bottom: 0;         /* stick to the bottom of the text */
+    left: 0;           /* start at the left edge */
+    width: 100%;       /* full width for the underline */
+    height: 0.75px;       /* thickness of the underline */
+    background: black; /* color of the underline */
+
+    /* We'll animate by scaling horizontally from 0 to 1 */
+    transform: scaleX(0);
+    transform-origin: bottom right; /* or top right */
+    transition: transform 0.3s ease-out;
+}
+
+/* On hover, scale to full width */
+.span-btn:hover::after {
+    transform: scaleX(1);
+    transform-origin: bottom left; /* or top left */
+}
+
+
+@keyframes slideInDown {
+    0% {
+        opacity: 0;
+        transform: translateY(-50px); /* Start above the original position */
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0); /* End at the original position */
+    }
+}
+
+@keyframes slideInLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-50px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes showHeader {
+    0% {
+        visibility: hidden;
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    100% {
+        visibility: visible;
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.first-line:hover, .second-line:hover, .third-line:hover {
+    transform: scale(1.05); /* Adds a hover scale effect */
 }
 
 

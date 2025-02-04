@@ -5,27 +5,28 @@
     --color-3: #3b3b3b;
     --text-color: #000000;
 
-    --text-font: Arial, Helvetica, sans-serif;
+    --text-font: 'Roboto', sans-serif;
 
-    --big-title-font-size: 5em;
-    --big-title-font-size-resp-m: 3em;
-    --big-title-font-size-resp: 1.5em;
 
-    --title-text-size: 2em;
-    --title-text-size-resp: 1.25em;
+    --big-title-font-size: 5rem;
+    --big-title-font-size-resp-m: 3rem;
+    --big-title-font-size-resp: 1.5rem;
 
-    --main-text-size: 1.25em;
-    --main-text-size-resp: 0.75em;
+    --title-text-size: 2rem;
+    --title-text-size-resp: 1.25rem;
 
-    --additional-text-size: 0.75em;
-    --additional-text-size-resp: 0.5em;
+    --main-text-size: 1rem;
+    --main-text-size-resp: 0.75rem;
+
+    --additional-text-size: 0.75rem;
+    --additional-text-size-resp: 0.5rem;
 }
 
 body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-        sans-serif;
+    font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     // cursor: none;
@@ -43,6 +44,13 @@ code {
 ::-webkit-scrollbar-thumb {
     background-color: var(--color-3);
     border-radius: 6px;
+    visibility: hidden;
+    transition: opacity 1s ease-out;
+}
+
+/* Add this class to the container (or body) after 4s with JS (or another trigger) */
+.show-scrollbar ::-webkit-scrollbar-thumb {
+    visibility: visible;
 }
 
 ::-webkit-scrollbar-track {

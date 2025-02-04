@@ -38,7 +38,7 @@ const ContactMeComponent: React.FC<ContactMeComponentProps> = ({ textLeave, link
         onMouseLeave={handleMouseLeave}
       >
         <div className='contact-t'>
-          <p className='contact-me-title title-1'>Contact me on</p>
+          <h4 className='contact-me-title'>Contact me on</h4>
           <button className='close-btn' onClick={handleMouseLeave}>
             <Cross />
           </button>

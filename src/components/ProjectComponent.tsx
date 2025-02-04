@@ -20,7 +20,7 @@ const ProjectComponent: React.FC<ProjectComponentProps> = ({ textEnter, textLeav
     return (
         <div className='project-container'>
             {isRight ? (
-                <>
+                <div className="project-row">
                     <div className='project-description is-right'>
                         <div className='pr-name'>
                             <h1 className='pr-num' onMouseEnter={textEnter} onMouseLeave={textLeave}>{name.split('_')[0]}</h1>
@@ -28,29 +28,26 @@ const ProjectComponent: React.FC<ProjectComponentProps> = ({ textEnter, textLeav
                         </div>
                         <p className='main-text' onMouseEnter={textEnter} onMouseLeave={textLeave}>{description}</p>
                     </div>
-                    <div className='line'>
-                        <div className='line-circle'></div>
-                    </div>
+                    {/*<div className='line'></div>*/}
                     <a className="project-content" href={`${link}`} onMouseEnter={linkEnter} onMouseLeave={textLeave} >
                         <img src={`${pictureLink}`}></img>
                     </a>
-                </>
+                </div>
             ) : (
-                <>
+                <div className="project-row">
                     <a className="project-content" href={`${link}`} onMouseEnter={linkEnter} onMouseLeave={textLeave}>
                         <img src={`${pictureLink}`}></img>
                     </a>
-                    <div className='line'>
-                        <div className='line-circle' ></div>
-                    </div>
+                    {/*<div className='line'></div>*/}
                     <div className='project-description'>
                         <div className='pr-name'>
-                            <h1 className='pr-num' onMouseEnter={textEnter} onMouseLeave={textLeave}>{name.split('_')[0]}</h1>
+                            <h1 className='pr-num' onMouseEnter={textEnter}
+                                onMouseLeave={textLeave}>{name.split('_')[0]}</h1>
                             <h2 onMouseEnter={textEnter} onMouseLeave={textLeave}>{name.split('_')[1]}</h2>
                         </div>
                         <p className='main-text' onMouseEnter={textEnter} onMouseLeave={textLeave}>{description}</p>
                     </div>
-                </>
+                </div>
             )}
         </div>
     )

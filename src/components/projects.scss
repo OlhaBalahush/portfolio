@@ -50,14 +50,7 @@
 // v3
 
 .projects-container {
-    margin-top: 100px;
     display: flex;
     flex-direction: column;
     width: 100%;
-}
-
-@media (max-width: 900px) {
-    .projects-container{
-        margin-top: 0;
-    }
 }

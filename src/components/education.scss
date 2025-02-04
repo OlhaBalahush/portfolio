@@ -5,7 +5,7 @@
 }
 
 .education-box {
-    border-top: 1px solid var(--my-styles-text-color, #000);
+    border-top: 1px solid gray;
     height: 100px;
     width: 100%;
     display: flex;
@@ -66,5 +66,5 @@
 }
 
 .last {
-    border-bottom: 1px solid var(--my-styles-text-color, #000);
+    border-bottom: 1px solid gray;
 }

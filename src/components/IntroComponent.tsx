@@ -1,5 +1,7 @@
-import { color } from 'framer-motion';
+import { color, motion } from 'framer-motion';
 import './basic.scss'
+import './intro.scss'
+import {useEffect, useState} from "react";
 
 interface IntroComponentProps {
     textEnter: () => void;
@@ -10,11 +12,10 @@ const IntroComponent: React.FC<IntroComponentProps> = ({ textEnter, textLeave })
     return (
         <div className="page page-height">
             <div>
-                <h1 onMouseEnter={textEnter} onMouseLeave={textLeave} className='title'>Welcome, here!</h1>
-                <h1 onMouseEnter={textEnter} onMouseLeave={textLeave} className='title'>I’m Olha Balahush</h1>
-                <span className="main-text" onMouseEnter={textEnter} onMouseLeave={textLeave}>And it’s my website. Enjoy!</span>
-                <br />
-                <span className="additional-text" onMouseEnter={textEnter} onMouseLeave={textLeave} style={{color: 'gray'}}>The website is currently under development and is not yet ready.</span>
+                <h1 onMouseEnter={textEnter} onMouseLeave={textLeave} className='title first-line'>Welcome, here!</h1>
+                <h1 onMouseEnter={textEnter} onMouseLeave={textLeave} className='title second-line'>I’m Olha Balahush</h1>
+                <div className="horizontal-line third-line"></div>
+                <span className="main-text third-line" onMouseEnter={textEnter} onMouseLeave={textLeave}>A designer and developer passionate about crafting intuitive, user-centered digital experiences. I focus on usability, accessibility, and seamless interactions, bridging the gap between design, development, and product strategy to create impactful solutions</span>
             </div>
         </div>
     )

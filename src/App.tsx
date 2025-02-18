@@ -70,8 +70,6 @@ function App() {
     };
   }, []);
 
-
-
   const cursorVariants: Variants = {
     default: {
       height: 32,
@@ -116,6 +114,13 @@ function App() {
     }
   };
 
+  const [isOpen, setIsOpen ] = useState(false);
+
+  function handleNav(navigateTo: number) {
+    ref.current?.scrollTo(navigateTo)
+    setIsOpen(false)
+  }
+
   return (
       <>
         <motion.div
@@ -133,8 +138,29 @@ function App() {
           )} </motion.div>
         <ContactMeComponent linkEnter={linkEnter} textLeave={textLeave}/>
 
-        <header>
-          <span className="span-btn" key={4} onMouseEnter={textEnter} onMouseLeave={textLeave} onClick={() => ref.current?.scrollTo(0)}>Olha Balahush</span>
+        <header className="glassmorphism">
+          <span className="span-btn" key={4} onMouseEnter={textEnter} onMouseLeave={textLeave}
+                onClick={() => ref.current?.scrollTo(0)}>Olha Balahush</span>
+          <button
+              className="hamburger-menu"
+              onClick={() => setIsOpen(!isOpen)}
+          >
+            <motion.div
+                style={{backgroundColor: "black", height: "2px", width: "100%", borderRadius: "1px"}}
+                animate={{rotate: isOpen ? 45 : 0, y: isOpen ? 7 : 0}}
+                transition={{duration: 0.3}}
+            />
+            <motion.div
+                style={{backgroundColor: "black", height: "2px", width: "100%", borderRadius: "1px"}}
+                animate={{opacity: isOpen ? 0 : 1}}
+                transition={{duration: 0.3}}
+            />
+            <motion.div
+                style={{backgroundColor: "black", height: "2px", width: "100%", borderRadius: "1px"}}
+                animate={{rotate: isOpen ? -45 : 0, y: isOpen ? -7 : 0}}
+                transition={{duration: 0.3}}
+            />
+          </button>
           <div className="navs-container">
             <span className="span-btn" key={0} onMouseEnter={textEnter} onMouseLeave={textLeave}
                   onClick={() => ref.current?.scrollTo(0.85)}>About</span>
@@ -146,6 +172,34 @@ function App() {
                   onClick={() => ref.current?.scrollTo(10)}>Contact</span>
           </div>
         </header>
+
+        {isOpen && (
+            <motion.div
+                className="glassmorphism adopted-nav-container"
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  position: "absolute",
+                  top: "60px",
+                  right: "5%",
+                  width: "160px",
+                  borderRadius: "0.25rem",
+                  padding: "1rem"
+                }}
+                initial={{opacity: 0, y: -10}}
+                animate={{opacity: 1, y: 0}}
+                transition={{duration: 0.3}}
+            >
+                <span className="span-btn" key={0} onMouseEnter={textEnter} onMouseLeave={textLeave}
+                      onClick={() => handleNav(0.85)}>About</span>
+              <span className="span-btn" key={1} onMouseEnter={textEnter} onMouseLeave={textLeave}
+                    onClick={() => handleNav(1.55)}>Education</span>
+              <span className="span-btn" key={2} onMouseEnter={textEnter} onMouseLeave={textLeave}
+                    onClick={() => handleNav(2.4)}>Projects</span>
+              <span className="span-btn" key={3} onMouseEnter={textEnter} onMouseLeave={textLeave}
+                    onClick={() => handleNav(10)}>Contact</span>
+            </motion.div>
+        )}
 
         <div className='App'>
           <Parallax pages={11} ref={ref}>

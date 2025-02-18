@@ -7,6 +7,18 @@
     flex-direction: column;
 }
 
+.hamburger-menu {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 40px;
+    height: 32px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+}
+
 .container {
     display: flex;
     justify-content: center;
@@ -140,13 +152,6 @@ header {
     padding: 0rem 2.5rem;
     height: 50px;
 
-    /* Glassmorphism background */
-    background: rgba(255, 255, 255, 0.15); /* semi-transparent */
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px); /* for Safari support */
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* subtle border */
-    box-shadow: 0 2px 30px rgba(0, 0, 0, 0.05);
-
     position: fixed;
     top: 0;
     left: 0;
@@ -156,6 +161,33 @@ header {
     visibility: hidden;
     animation: showHeader 1s ease-out forwards;
     animation-delay: 3.5s;
+}
+
+.adopted-nav-container {
+    z-index: 200;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    top: 60px;
+    right: 5%;
+    width: 160px;
+    border-radius: 0.25rem;
+    padding: 1rem;
+
+    /* Glass Effect */
+    background: rgba(255, 255, 255, 0.5); /* Transparent */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); /* Safari Support */
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 30px rgba(0, 0, 0, 0.05);
+}
+
+.glassmorphism {
+    background: rgba(255, 255, 255, 0.15); /* semi-transparent */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); /* for Safari support */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* subtle border */
+    box-shadow: 0 2px 30px rgba(0, 0, 0, 0.05);
 }
 
 h1 {
@@ -309,10 +341,42 @@ p, span, ul, button {
     transform: scale(1.05); /* Adds a hover scale effect */
 }
 
+@media (max-width: 1300px) {
+    .full {
+        margin-left: -5%;
+        width: 100vw !important;
+    }
+    .row {
+        width: 100%;
+        display: grid;
+        grid-template-columns: 100%;
+        gap: 0.25rem;
+        align-items: start;
+        margin-bottom: 1.5rem;
+    }
+}
 
 @media (max-width: 1048px) {
-    .title{
+    .title, h1{
         font-size: var(--big-title-font-size-resp-m);
+    }
+
+    h2 {
+        font-size: 1.25rem;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    h3, h4, h5, h6 {
+        font-size: 1rem;
+    }
+
+    h5 {
+        margin: 0.25rem 0;
+    }
+
+    h6 {
+        margin: 0.2rem 0;
     }
 
     .cursor {
@@ -325,7 +389,19 @@ p, span, ul, button {
 }
 
 @media (max-width: 900px) {
-    .title{
+    header {
+        padding: 0rem 5%;
+    }
+
+    .navs-container {
+        display: none;
+    }
+
+    .hamburger-menu{
+        display: flex;
+    }
+
+    .title, h1{
         font-size: var(--big-title-font-size-resp);
     }
 

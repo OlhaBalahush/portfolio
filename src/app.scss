@@ -130,6 +130,24 @@ button:first-child{
     transition: transform 0.3s ease-in-out;
 }
 
+.pic-container.placeholder-image {
+    min-height: 20rem;
+    background: repeating-linear-gradient(45deg, #f4f4f4, #f4f4f4 10px, #ececec 10px, #ececec 20px);
+    border: 1px dashed #b3b3b3;
+    color: #8a8a8a;
+    font-style: italic;
+    text-align: center;
+    padding: 1rem;
+}
+
+blockquote {
+    margin: 1rem 0;
+    padding-left: 1rem;
+    border-left: 2px solid var(--color-1);
+    font-style: italic;
+    color: #555;
+}
+
 
 .horizontal-line {
     width: 100%;

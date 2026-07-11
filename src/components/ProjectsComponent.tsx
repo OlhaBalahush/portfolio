@@ -17,7 +17,7 @@ const ProjectsComponent: React.FC<ProjectsComponentProps> = ({ textEnter, textLe
         <div className="page rows-page">
 
 
-            <h5 onMouseEnter={textEnter} onMouseLeave={textLeave}>Development Cases</h5>
+            <h5 onMouseEnter={textEnter} onMouseLeave={textLeave}>School projects</h5>
             <div className="horizontal-line"></div>
             <div className='projects-container'>
                 <ProjectComponent

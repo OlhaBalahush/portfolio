@@ -51,28 +51,36 @@ function App() {
   const [caseStudyFactors, setCaseStudyFactors] = useState<number[]>(
       () => Array(CASE_STUDY_COUNT).fill(FALLBACK_CASE_STUDY_FACTOR)
   );
-  const [layoutReady, setLayoutReady] = useState(false);
+  // Bumped on every real measurement (initial + every resize) to force the Parallax to remount,
+  // since react-spring/parallax freezes each layer's offset/speed/factor at first mount.
+  const [layoutGeneration, setLayoutGeneration] = useState(0);
 
   useLayoutEffect(() => {
     let cancelled = false;
     let rafId = 0;
+    let resizeTimeout: ReturnType<typeof setTimeout> | undefined;
     let cleanupImageListeners = () => {};
 
     const finalize = () => {
       if (cancelled) return;
       const viewportHeight = window.innerHeight;
       setCaseStudyFactors(caseStudyRefs.current.map(el => (el as HTMLDivElement).scrollHeight / viewportHeight));
-      setLayoutReady(true);
+      setLayoutGeneration(g => g + 1);
     };
 
     // Parallax only mounts its ParallaxLayer children (and their refs) one tick after
     // it mounts itself, so keep polling until every case-study ref has actually attached.
-    const tryMeasure = () => {
+    // Used for both the initial measurement AND every resize — a resize can fire before images
+    // have finished (re)loading, and measuring early locks in a too-short height that only gets
+    // fixed if something re-measures afterward, which made the bug depend on load timing/reloads.
+    const measureWhenReady = () => {
       if (cancelled) return;
+      cleanupImageListeners();
+
       const refs = caseStudyRefs.current;
       const allAttached = refs.length === CASE_STUDY_COUNT && refs.every(Boolean);
       if (!allAttached) {
-        rafId = requestAnimationFrame(tryMeasure);
+        rafId = requestAnimationFrame(measureWhenReady);
         return;
       }
 
@@ -101,11 +109,22 @@ function App() {
       };
     };
 
-    tryMeasure();
+    // Case-study height depends on viewport width (text reflows narrower/taller), so a resize
+    // (window resize, devtools device toolbar, orientation change) needs a fresh measurement —
+    // debounced so it only fires once the resize has settled, not on every intermediate frame.
+    const onResize = () => {
+      clearTimeout(resizeTimeout);
+      resizeTimeout = setTimeout(measureWhenReady, 200);
+    };
+
+    measureWhenReady();
+    window.addEventListener('resize', onResize);
     return () => {
       cancelled = true;
       cancelAnimationFrame(rafId);
       cleanupImageListeners();
+      clearTimeout(resizeTimeout);
+      window.removeEventListener('resize', onResize);
     };
   }, []);
 
@@ -297,7 +316,7 @@ function App() {
         )}
 
         <div className='App'>
-          <Parallax key={layoutReady ? 'measured' : 'initial'} pages={totalPages} ref={ref}>
+          <Parallax key={layoutGeneration} pages={totalPages} ref={ref}>
             <ParallaxLayer
                 offset={0}
                 speed={0.5}>

@@ -235,7 +235,8 @@ function App() {
     setIsOpen(false)
   }
 
-  return (
+  // @ts-ignore
+    return (
       <>
         <motion.div
             className='cursor'
@@ -368,8 +369,7 @@ function App() {
                 <div className="row">
                   <h1 className='pr-num' onMouseEnter={textEnter} onMouseLeave={textLeave}>04</h1>
                   <div className=""></div>
-                  <h2 onMouseEnter={textEnter} onMouseLeave={textLeave}>Integration of Community
-                    into the Studying Platform</h2></div>
+                  <h2 onMouseEnter={textEnter} onMouseLeave={textLeave}>Integration of Community into the hybrid peer-to-peer studying platform</h2></div>
 
                 <div className="btns-container">
                   <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
@@ -598,19 +598,16 @@ function App() {
                   users, students complained it was misaligned with communication from the school, and admins said
                   it wasn't actually identifying the health of the batch or fulfilling their needs.</p>
 
-                <div className="pic-container prev full placeholder-image">
-                  <span>Placeholder, the scrapped feature (early screens + screen recording)</span>
+                <div className="pic-container">
+                  <img src={`${process.env.PUBLIC_URL + '/pacing.png'}`}></img>
                 </div>
 
-                <div className="pic-container placeholder-image">
-                  <span>Placeholder, pacing system, deadlines extending day by day</span>
-                </div>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>At this screen you can see how the pacing system
                   was implemented, highlighting students whose deadline was extending, day by day, letting them hang
                   out on tasks as long as possible.</p>
 
-                <div className="pic-container placeholder-image">
-                  <span>Placeholder, student view, time left on current assignment</span>
+                <div className="pic-container">
+                  <img src={`${process.env.PUBLIC_URL + '/pacing-student.png'}`}></img>
                 </div>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>At the students' view, they could see how much
                   time was left on the current assignment and encouraging points that could be received by completing
@@ -650,10 +647,6 @@ function App() {
                   possible solutions. That breadth is what leads to a better outcome, not just any solution, but the
                   best one.</p>
 
-                <div className="pic-container placeholder-image">
-                  <span>Placeholder, research notes / client quotes mapped out</span>
-                </div>
-
                 <h4 ref={caseStudy2ProcessRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>What did solving it actually involve?</h4>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>From there, I led the project end to end, as was
                   agreed upon with the team. I started by auditing the existing research and all the client quotes we
@@ -670,8 +663,8 @@ function App() {
                   isolation, but the research direction, the problem framing, the design decisions, and the frontend
                   implementation were mine to drive.</p>
 
-                <div className="pic-container placeholder-image">
-                  <span>Placeholder, Opportunity Solution Tree from the brainstorming session</span>
+                <div className="pic-container">
+                  <img src={`${process.env.PUBLIC_URL + '/extensions-brainstorming.png'}`}></img>
                 </div>
 
                 <h4 ref={caseStudy2DecisionsRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>What decisions did we make along the way?</h4>
@@ -689,8 +682,8 @@ function App() {
                   a flag, and kept the word "warning" only where school policy specifically required that language.
                   Same information, same visibility, meaningfully less weight to carry around every day.</p>
 
-                <div className="pic-container placeholder-image">
-                  <span>Placeholder, before/after: warning icon vs. flag on the dashboard</span>
+                <div className="pic-container">
+                  <img src={`${process.env.PUBLIC_URL + '/warnings.png'}`}></img>
                 </div>
 
                 <h5 onMouseEnter={textEnter} onMouseLeave={textLeave}>The notification channel</h5>
@@ -702,8 +695,8 @@ function App() {
                   response rates, and iterating from there, was the obvious next step, one that landed just after my
                   time on the project ended.</p>
 
-                <div className="pic-container placeholder-image">
-                  <span>Placeholder, the email notification, final version</span>
+                <div className="pic-container">
+                  <img src={`${process.env.PUBLIC_URL + '/notifications.png'}`}></img>
                 </div>
 
                 <h4 ref={caseStudy2TeamImpactRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>How did this change the team?</h4>
@@ -716,9 +709,14 @@ function App() {
                   learning point for our process, even if we learned it the hard way.</p>
 
                 <h4 ref={caseStudy2OutcomeRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>What was the outcome?</h4>
-                <div className="pic-container placeholder-image">
-                  <span>Placeholder, final shipped dashboard, student view</span>
+
+                <div className="pic-container">
+                  <img src={`${process.env.PUBLIC_URL + '/flags-outcome.png'}`}></img>
                 </div>
+                <div className="pic-container">
+                  <img src={`${process.env.PUBLIC_URL + '/extensions-output.png'}`}></img>
+                </div>
+
                 <ul onMouseEnter={textEnter} onMouseLeave={textLeave}>
                   <li>Time spent on manual maintenance came down, partially confirmed through quarterly NPS follow-up</li>
                   <li>Admins reduced the manual tracking system they'd been maintaining outside the product</li>

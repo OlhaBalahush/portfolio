@@ -125,8 +125,8 @@ function App() {
   const projectsCardsOffset = runningOffset + 2;
   const educationOffset = projectsCardsOffset + 2.05;
   const byeOffset = educationOffset + 0.85;
-  const arrowOffset = byeOffset;
-  const totalPages = Math.ceil(arrowOffset + 1);
+  const arrowOffset = byeOffset + 0.65;
+  const totalPages = byeOffset + 1;
 
 
   const textEnter = () => setCursorVariant('text')
@@ -777,7 +777,7 @@ function App() {
 
                 <h4 ref={caseStudyCohortSourceRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>Where did the problem come from?</h4>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>The starting signal was NPS. Admins kept saying
-                  the platform felt complex and hard to navigate — a repeatable pattern, but a vague one. It didn't
+                  the platform felt complex and hard to navigate, a repeatable pattern, but a vague one. It didn't
                   tell us what part was confusing, or in which situations.</p>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Rather than guess at what "complicated" meant, I
                   went and shadowed clients directly. Shadowing is the most reliable way to see how someone actually
@@ -796,28 +796,28 @@ function App() {
                 </blockquote>
 
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>One moment from shadowing made this concrete: an
-                  admin spotted a learner still on a topic with a deadline two weeks out — from their experience,
-                  that's clearly not enough time left to finish and review it — and wanted to step in right there.
+                  admin spotted a learner still on a topic with a deadline two weeks out, from their experience,
+                  that's clearly not enough time left to finish and review it, and wanted to step in right there.
                   That told us the real unit of information admins needed wasn't "a learner's progress" on its own, it
                   was the relationship between a study item, how many people were on it, and its deadline. The same
                   data had to answer the reverse case too: if most of the cohort is taking 10 days on something
                   scheduled for 5, that's a sign the deadline is wrong, not the students.</p>
 
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>The cohort health picture also had to include
-                  people who'd normally get filtered out of a progress view entirely — anyone who'd dropped off or
-                  was on leave — because knowing who to support, and how, depends on seeing the whole cohort, not just
+                  people who'd normally get filtered out of a progress view entirely, anyone who'd dropped off or
+                  was on leave, because knowing who to support, and how, depends on seeing the whole cohort, not just
                   the people actively moving through it.</p>
 
                 <h4 ref={caseStudyCohortNextRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>But with all these insights, what did I do next?</h4>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Once I had this and the other issues from
                   shadowing mapped out, I sorted everything into two buckets: quick wins (for example, just
-                  program-configuration restrictions — easy fixes) and bigger experiments, like this one. I
+                  program-configuration restrictions, easy fixes) and bigger experiments, like this one. I
                   prioritized the cohort overview problem out of all of them, because it was both the most-used part
                   of the product and the biggest pain point admins had.</p>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>To make that concrete: to answer something as
                   simple as "how is this learner doing," admins were clicking 10+ times, bouncing back and forth
                   across the screen while holding all the context in their head. At the same time it was hard to say
-                  how the cohort was actually doing — the overview was just showing surface progress, so to get a
+                  how the cohort was actually doing, the overview was just showing surface progress, so to get a
                   better picture of health, admins had to dig in and face many navigation steps.</p>
 
                 <div className="pic-container placeholder-image">
@@ -835,7 +835,7 @@ function App() {
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>A second decision was harder to resolve cleanly:
                   schools use two different deadline systems, some granular, some general, and that changes what
                   level of detail the participant view actually needs. I worked through this by going back to the
-                  original use case — tracking learners over time — and realized the right level of detail depends on
+                  original use case, tracking learners over time, and realized the right level of detail depends on
                   which topic a participant is currently on. So instead of forcing one fixed format, that had to stay
                   flexible.</p>
 
@@ -848,7 +848,7 @@ function App() {
 
                 <h4 ref={caseStudyCohortTestingRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>What did the first round of testing tell us?</h4>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Since the project's still active, only one round
-                  of usability testing has happened so far — moderated sessions where I asked admins to walk through
+                  of usability testing has happened so far, moderated sessions where I asked admins to walk through
                   the exact use cases they'd described earlier: checking cohort health, spotting who's falling
                   behind, deciding if a deadline needed to change, plus open time to explore on their own.</p>
 
@@ -859,7 +859,7 @@ function App() {
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>That round surfaced two clear issues: the student
                   list included information that was confusing or just unnecessary, and the curriculum settings were
                   hard to make sense of as they stood. Click count also came out of this as a success metric worth
-                  tracking going forward — a direct, measurable stand-in for the original "10+ clicks" complaint.</p>
+                  tracking going forward, a direct, measurable stand-in for the original "10+ clicks" complaint.</p>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Based on that, I iterated into an improved
                   version.</p>
 
@@ -869,7 +869,7 @@ function App() {
 
                 <h4 ref={caseStudyCohortStatusRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>Where this stands now</h4>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>The project hasn't reached development yet. Most
-                  of the collaboration so far has been in research and validation — working closely with clients
+                  of the collaboration so far has been in research and validation, working closely with clients
                   through usability testing. Given what this project actually needs (a real information-architecture
                   rework, not a surface tweak), research and design were always going to be the longest phases, and
                   that's held true so far.</p>
@@ -878,7 +878,7 @@ function App() {
 
                 <h4 ref={caseStudyCohortRetroRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>What would I do differently?</h4>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>I'd validate earlier. I spent more time than I
-                  needed polishing the design before the first round of testing — testing sooner would have surfaced
+                  needed polishing the design before the first round of testing, testing sooner would have surfaced
                   the same issues faster, with less invested in a direction before I knew whether it was right.</p>
               </div>
             </ParallaxLayer>
@@ -922,7 +922,7 @@ function App() {
                   <h6 ref={caseStudy3OverviewRef}>Overview</h6>
                   <div className="line"></div>
                   <p>By the time a design system landed on my plate, the product had been growing without one for
-                    close to 3 years — colors, shades, buttons, layout patterns, even something as basic as when to
+                    close to 3 years, colors, shades, buttons, layout patterns, even something as basic as when to
                     show a confirmation step were all inconsistent depending on who built what and when. I audited the
                     whole platform alone, rebuilt it from tokens up, and, the part I'm most proud of, turned the
                     system into an automated check inside the codebase itself, so it didn't just sit in Figma waiting
@@ -937,7 +937,7 @@ function App() {
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>3 years is a long time for a product to grow
                   without a shared visual language. It showed up everywhere, not just in colors, but in the shades of
                   the same color, in how buttons were styled, in layout placement, in when a confirmation step
-                  appeared and when it didn't. None of this was anyone's fault exactly — it's what happens by default
+                  appeared and when it didn't. None of this was anyone's fault exactly, it's what happens by default
                   when decisions get made feature by feature with no one owning consistency across all of them. But it
                   was visible enough, to enough people, that it had already become an acknowledged problem well before
                   it landed with me.</p>
@@ -953,13 +953,13 @@ function App() {
 
                 <h4 ref={caseStudy3StartRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>Where did I start, and why?</h4>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>I went through the entire platform first,
-                  cataloguing what actually existed — every token, every component, every recurring pattern. Rather
+                  cataloguing what actually existed, every token, every component, every recurring pattern. Rather
                   than starting with whatever looked messiest, I prioritized based on where the inconsistency was
                   doing the most damage.</p>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Tokens came first. Some existing colors were
-                  failing contrast ratio checks — a real accessibility problem, not a cosmetic one. Separately, as the
+                  failing contrast ratio checks, a real accessibility problem, not a cosmetic one. Separately, as the
                   platform brought on more clients, the existing secondary color turned out not to work with
-                  white-labeling — it couldn't flex to different client branding the way it needed to. Fixing tokens
+                  white-labeling, it couldn't flex to different client branding the way it needed to. Fixing tokens
                   wasn't the interesting part of the project, but it was the part everything else depended on.</p>
 
                 <div className="pic-container placeholder-image">
@@ -968,7 +968,7 @@ function App() {
 
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Once tokens were settled and published, I moved
                   to components, applying the same process: define, evaluate, fix. For each item, I worked two tracks
-                  in parallel — updating it properly in Figma, and encoding the rule as a skill in the codebase, then
+                  in parallel, updating it properly in Figma, and encoding the rule as a skill in the codebase, then
                   running that skill against the live codebase to surface every place the old, inconsistent version
                   was still in use.</p>
 
@@ -977,7 +977,7 @@ function App() {
                 </div>
 
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Some of the messier inconsistencies weren't just
-                  "different styles" — they were flat-out duplicate components doing the same job in slightly
+                  "different styles", they were flat-out duplicate components doing the same job in slightly
                   different ways, which I unified rather than just standardizing each in place.</p>
 
                 <div className="pic-container placeholder-image">
@@ -997,15 +997,15 @@ function App() {
 
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>It also changed what building something new
                   actually felt like. Once the core pieces existed and were enforced, most new design work stopped
-                  being "design from nothing" and started being closer to assembling from existing, trusted pieces —
-                  lego, basically — except for the genuinely new parts that had no precedent in the system yet. That's
+                  being "design from nothing" and started being closer to assembling from existing, trusted pieces,
+                  lego, basically, except for the genuinely new parts that had no precedent in the system yet. That's
                   a very different, much faster kind of design work.</p>
 
                 <h4 ref={caseStudy3ImpactRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>How did it impact team work & the product?</h4>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Every time a new rule went into the codebase,
                   developers actually used it, and pushed back or suggested improvements based on what they ran into
                   in practice. That feedback loop is what kept the system from calcifying into a document nobody
-                  trusted — it stayed something people used and helped shape, not a spec handed down once and left to
+                  trusted, it stayed something people used and helped shape, not a spec handed down once and left to
                   rot.</p>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Before this, engineers had two options when they
                   weren't sure what to use: come find me and double-check, the best-case outcome, or just guess, and
@@ -1014,7 +1014,7 @@ function App() {
                   designer's head.</p>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>The other clear impact was on my own time: less
                   of it went into redesigning or reworking existing flows and views, since most of what previously
-                  caused rework — inconsistent components, ambiguous patterns — had already been resolved at the
+                  caused rework, inconsistent components, ambiguous patterns, had already been resolved at the
                   system level.</p>
 
                 <div className="pic-container placeholder-image">
@@ -1047,14 +1047,14 @@ function App() {
 
             <ParallaxLayer
                 offset={byeOffset}
-                speed={1}
+                speed={0}
                 factor={4}>
               <ByeComponent textEnter={textEnter} textLeave={textLeave}/>
             </ParallaxLayer>
 
             <ParallaxLayer
                 offset={arrowOffset}
-                speed={1.25}>
+                speed={0.1}>
               <svg
                   className='to-page-center arrow'
                   width="38" height="103" viewBox="0 0 38 103" fill="none" xmlns="http://www.w3.org/2000/svg">

@@ -354,7 +354,7 @@ function App() {
 
             <ParallaxLayer
                 offset={PROJECTS_TITLE_OFFSET}
-                speed={0.4}
+                speed={0.1}
                 factor={4}>
               <div className="page">
                 <h1 onMouseEnter={textEnter} onMouseLeave={textLeave} className='title'>Projects</h1>
@@ -709,10 +709,12 @@ function App() {
                   learning point for our process, even if we learned it the hard way.</p>
 
                 <h4 ref={caseStudy2OutcomeRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>What was the outcome?</h4>
-
+                {/*  TODO improve copy*/}
+                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Clear warnings view for admins. System that supports cohort health, so admins can see flags on students who needs support or cannot be at school, cause of violations already. Actional in details view for each students for better picture of violations, and flexible management in case of any mistake</p>
                 <div className="pic-container">
                   <img src={`${process.env.PUBLIC_URL + '/flags-outcome.png'}`}></img>
                 </div>
+                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Automatic extensions, that reduces admins manual work on providing and managing them manuall. Now along with extensions automated warnings send along so admin don't have to manage it, but they see overview at the same time. System that supports cohort health, so admins can see flags on students who needs support or cannot be at school, cause of violations already.</p>
                 <div className="pic-container">
                   <img src={`${process.env.PUBLIC_URL + '/extensions-output.png'}`}></img>
                 </div>
@@ -788,10 +790,6 @@ function App() {
                     project is continuing toward MVP development.</p>
                 </div>
 
-                <div className="pic-container prev full placeholder-image">
-                  <span>Placeholder, NPS feedback theme summary / recurring complexity comments</span>
-                </div>
-
                 <h4 ref={caseStudyCohortSourceRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>Where did the problem come from?</h4>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>The starting signal was NPS. Admins kept saying
                   the platform felt complex and hard to navigate, a repeatable pattern, but a vague one. It didn't
@@ -837,9 +835,12 @@ function App() {
                   how the cohort was actually doing, the overview was just showing surface progress, so to get a
                   better picture of health, admins had to dig in and face many navigation steps.</p>
 
-                <div className="pic-container placeholder-image">
-                  <span>Placeholder, current admin flow, click path to check one learner's progress</span>
+                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>How is the cohort actually doing?</p>
+
+                <div className="pic-container">
+                  <img src={`${process.env.PUBLIC_URL + '/cohort-current.png'}`}></img>
                 </div>
+                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>To conclude in total I made at least 13 clicks. And this module was the easy case, since the deadline had already passed, so I didn't need to dig into individual topics like the admin do. For them, managing cohort health takes over 50 clicks. This one use case makes the scale of the navigation and architecture problem obvious.</p>
 
                 <h4 ref={caseStudyCohortDesignRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>Design depths</h4>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>I deliberately started from a blank view, not the
@@ -856,11 +857,14 @@ function App() {
                   which topic a participant is currently on. So instead of forcing one fixed format, that had to stay
                   flexible.</p>
 
-                <div className="pic-container placeholder-image">
-                  <span>Placeholder, early blank-slate wireframe, cohort overview v1</span>
+                <div className="pic-container">
+                  <img src={`${process.env.PUBLIC_URL + '/3rd-platform-johvi.png'}`}></img>
                 </div>
-                <div className="pic-container placeholder-image">
-                  <span>Placeholder, reference screenshot, 3rd-party platform module overview</span>
+                <div className="pic-container">
+                  <img src={`${process.env.PUBLIC_URL + '/design-cohort-1.png'}`}></img>
+                </div>
+                <div className="pic-container">
+                  <img src={`${process.env.PUBLIC_URL + '/design-cohort-1.1.png'}`}></img>
                 </div>
 
                 <h4 ref={caseStudyCohortTestingRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>What did the first round of testing tell us?</h4>
@@ -869,10 +873,6 @@ function App() {
                   the exact use cases they'd described earlier: checking cohort health, spotting who's falling
                   behind, deciding if a deadline needed to change, plus open time to explore on their own.</p>
 
-                <div className="pic-container placeholder-image">
-                  <span>Placeholder, usability testing session / prototype screens used</span>
-                </div>
-
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>That round surfaced two clear issues: the student
                   list included information that was confusing or just unnecessary, and the curriculum settings were
                   hard to make sense of as they stood. Click count also came out of this as a success metric worth
@@ -880,8 +880,14 @@ function App() {
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Based on that, I iterated into an improved
                   version.</p>
 
-                <div className="pic-container placeholder-image">
-                  <span>Placeholder, redesigned cohort overview, post-testing iteration</span>
+                <div className="pic-container">
+                  <img src={`${process.env.PUBLIC_URL + '/design-cohort-2.png'}`}></img>
+                </div>
+                <div className="pic-container">
+                  <img src={`${process.env.PUBLIC_URL + '/design-cohort-2.1.png'}`}></img>
+                </div>
+                <div className="pic-container">
+                  <img src={`${process.env.PUBLIC_URL + '/design-cohort-2.2.png'}`}></img>
                 </div>
 
                 <h4 ref={caseStudyCohortStatusRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>Where this stands now</h4>
@@ -946,8 +952,8 @@ function App() {
                     to be ignored.</p>
                 </div>
 
-                <div className="pic-container prev full placeholder-image">
-                  <span>Placeholder, before: inconsistency examples across the product (colors/buttons/patterns side by side)</span>
+                <div className="pic-container full">
+                    <img src={`${process.env.PUBLIC_URL + '/ds-overview.png'}`}></img>
                 </div>
 
                 <h4 ref={caseStudy3ProblemRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>What was going on for 3 years?</h4>
@@ -969,6 +975,10 @@ function App() {
                   scratch.</p>
 
                 <h4 ref={caseStudy3StartRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>Where did I start, and why?</h4>
+
+                 <div className="pic-container full">
+                  <img src={`${process.env.PUBLIC_URL + '/ds-strategy.png'}`}></img>
+                </div>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>I went through the entire platform first,
                   cataloguing what actually existed, every token, every component, every recurring pattern. Rather
                   than starting with whatever looked messiest, I prioritized based on where the inconsistency was
@@ -979,27 +989,25 @@ function App() {
                   white-labeling, it couldn't flex to different client branding the way it needed to. Fixing tokens
                   wasn't the interesting part of the project, but it was the part everything else depended on.</p>
 
-                <div className="pic-container placeholder-image">
-                  <span>Placeholder, token audit: before/after palette and contrast fixes</span>
+                <div className="pic-container">
+                  <img src={`${process.env.PUBLIC_URL + '/tokens-colors.png'}`}></img>
                 </div>
 
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Once tokens were settled and published, I moved
-                  to components, applying the same process: define, evaluate, fix. For each item, I worked two tracks
+                  to components, applying the same process. For each item, I worked two tracks
                   in parallel, updating it properly in Figma, and encoding the rule as a skill in the codebase, then
                   running that skill against the live codebase to surface every place the old, inconsistent version
                   was still in use.</p>
 
-                <div className="pic-container placeholder-image">
-                  <span>Placeholder, Figma component library structure</span>
+                <div className="pic-container">
+                  <img src={`${process.env.PUBLIC_URL + '/ds-struct.png'}`}></img>
                 </div>
 
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Some of the messier inconsistencies weren't just
                   "different styles", they were flat-out duplicate components doing the same job in slightly
                   different ways, which I unified rather than just standardizing each in place.</p>
 
-                <div className="pic-container placeholder-image">
-                  <span>Placeholder, before/after: duplicated components merged into one</span>
-                </div>
+                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Look for some examples here: <a onMouseEnter={linkEnter} onMouseLeave={textLeave} className='link' href='https://www.figma.com/proto/E4j6oS9iXeNw8rNOI0gydu/CV?page-id=2050%3A234&node-id=2109-38078&viewport=-850%2C62%2C0.07&t=OwXLQlFgrdPq21y8-9&scaling=scale-down-width&content-scaling=fixed&starting-point-node-id=2109%3A38078&show-proto-sidebar=1' target='_blank' rel='noopener noreferrer'>Components.Buttons</a>, <a onMouseEnter={linkEnter} onMouseLeave={textLeave} className='link' href='https://www.figma.com/proto/E4j6oS9iXeNw8rNOI0gydu/CV?page-id=2050%3A234&node-id=2053-10603&viewport=-850%2C62%2C0.07&t=OwXLQlFgrdPq21y8-9&scaling=scale-down-width&content-scaling=fixed&starting-point-node-id=2053%3A10603&show-proto-sidebar=1' target='_blank' rel='noopener noreferrer'>Patterns.NavigationBar</a>, <a onMouseEnter={linkEnter} onMouseLeave={textLeave} className='link' href='https://www.figma.com/proto/E4j6oS9iXeNw8rNOI0gydu/CV?page-id=2050%3A234&node-id=2053-13850&viewport=-850%2C62%2C0.07&t=OwXLQlFgrdPq21y8-9&scaling=scale-down-width&content-scaling=fixed&starting-point-node-id=2053%3A13850&show-proto-sidebar=1' target='_blank' rel='noopener noreferrer'>Pattern.ResizableCard</a></p>
 
                 <h4 ref={caseStudy3StickRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>How did I make the design system useful straight away?</h4>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>This is the part I think mattered most. The
@@ -1008,8 +1016,8 @@ function App() {
                   touched something small, long before it would've reached a designer's eyes, if it ever would have at
                   all. A design system nobody enforces is just a suggestion; this one had teeth.</p>
 
-                <div className="pic-container placeholder-image">
-                  <span>Placeholder, code review flagging a design-system inconsistency</span>
+                <div className="pic-container">
+                  <img src={`${process.env.PUBLIC_URL + '/claude-skills.png'}`}></img>
                 </div>
 
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>It also changed what building something new
@@ -1033,10 +1041,6 @@ function App() {
                   of it went into redesigning or reworking existing flows and views, since most of what previously
                   caused rework, inconsistent components, ambiguous patterns, had already been resolved at the
                   system level.</p>
-
-                <div className="pic-container placeholder-image">
-                  <span>Placeholder, product before/after: same flow, pre- and post-design-system</span>
-                </div>
 
                 <h4 ref={caseStudy3RetroRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>What would I do differently?</h4>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>If I could choose, I'd build the design system

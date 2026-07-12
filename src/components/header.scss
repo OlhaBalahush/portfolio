@@ -1,0 +1,10 @@
+.navs-container {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+header {
+  background-color: red;
+  z-index: 10000;
+}

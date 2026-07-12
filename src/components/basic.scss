@@ -36,8 +36,8 @@
 }
 
 .link {
-    color: var(--color-1);
-    text-decoration: none;
+    color: var(--color-3);
+    text-decoration: underline;
 }
 
 .ux-cases-page {
@@ -51,6 +51,13 @@
     flex-direction: column;
 }
 
+@media (max-width: 1300px) {
+    .page {
+        width: 90%;
+        margin: 0 5%;
+    }
+}
+
 @media (max-width: 900px) {
     .title-1 {
         font-size: var(--title-text-size-resp);
@@ -62,10 +69,5 @@
 
     .additional-text {
         font-size: var(--additional-text-size-resp);
-    }
-
-    .page {
-        width: 90%;
-        margin: 0 5%;
     }
 }

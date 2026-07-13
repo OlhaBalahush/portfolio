@@ -841,9 +841,8 @@ function App() {
                   <img src={`${process.env.PUBLIC_URL + '/UR-summary.png'}`} alt="Summary of findings from student user interviews"></img>
                 </div>
 
-                <div className="row" onMouseEnter={textEnter} onMouseLeave={textLeave}>
+                <div onMouseEnter={textEnter} onMouseLeave={textLeave}>
                   <h6>Objective</h6>
-                  <div className="line"></div>
                 <div>
                   <p>The user interviews were designed to:</p>
                   <ul>
@@ -856,16 +855,14 @@ function App() {
                 </div>
                 </div>
 
-                <div className="row" onMouseEnter={textEnter} onMouseLeave={textLeave}>
+                <div onMouseEnter={textEnter} onMouseLeave={textLeave}>
                   <h6>Methodology</h6>
-                  <div className="line"></div>
                   <p>A semi-structured interview format was chosen, allowing flexibility to explore deeper insights into
                     students’ pain points and motivations</p>
                 </div>
 
-                <div className="row" onMouseEnter={textEnter} onMouseLeave={textLeave}>
+                <div onMouseEnter={textEnter} onMouseLeave={textLeave}>
                   <h6>Key Findings</h6>
-                  <div className="line"></div>
                   <p>After conducting user interviews, the most prominent pain point emerged:
                     <br></br>
                     Lack of community feeling among students—Many students felt isolated in their learning journey,
@@ -911,9 +908,8 @@ function App() {
                   <img src={`${process.env.PUBLIC_URL + '/testing.png'}`} alt="High-fidelity prototype used for usability testing"></img>
                 </div>
 
-                <div className="row" onMouseEnter={textEnter} onMouseLeave={textLeave}>
+                <div className="" onMouseEnter={textEnter} onMouseLeave={textLeave}>
                   <h6>Usability Testing</h6>
-                  <div className="line"></div>
                   <p>A moderated usability test with real users was conducted to validate design choices. Key takeaways
                     included:</p>
                   <ul>

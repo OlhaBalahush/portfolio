@@ -44,7 +44,7 @@ const ProjectsComponent: React.FC<ProjectsComponentProps> = ({ textEnter, textLe
                 <ProjectComponent
                     textEnter={textEnter} textLeave={textLeave} linkEnter={linkEnter}
                     name='04_Bomberman'
-                    description={'An multiplayer game based on Bomberman.'}
+                    description={'A multiplayer game based on Bomberman.'}
                     link={'https://github.com/OlhaBalahush/bomberman'}
                     pictureLink={process.env.PUBLIC_URL + '/bomberman.png'}
                     isRight={true}/>

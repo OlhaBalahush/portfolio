@@ -14,6 +14,18 @@
     height: 100vh;
 }
 
+.section-min-height {
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+// Centers About's content vertically in the middle of the section's height (same
+// treatment as Education), instead of sitting at the top with empty space below. Scoped
+// to the compound class so the case studies (also .ux-cases-page) aren't affected.
+.ux-cases-page.section-min-height {
+    justify-content: center;
+}
+
 .title-1 {
     font-size: var(--title-text-size);
 }
@@ -43,6 +55,7 @@
 .ux-cases-page {
     align-items: self-start;
     flex-direction: column;
+    margin-bottom: 4rem;
 }
 
 .ux-cases-nav {

@@ -1,9 +1,10 @@
 .App {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: calc(100vh - 7rem);
     background-color: white;
+    padding-top: 50px; // clears the fixed header
+}
+
+.scroll-page {
+    display: flex;
     flex-direction: column;
 }
 
@@ -103,6 +104,27 @@
     width: 100vw !important;
 }
 
+.title-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.title-container h2{
+  margin: 0;
+}
+
+.title-container h3{
+  margin: 0;
+}
+
+.title-container .btns-container{
+  display: none;
+  display: none;
+}
+
 .btns-container {
     display: flex;
     flex-direction: row;
@@ -110,11 +132,74 @@
     gap: 0.5rem;
 }
 
+.btns-container .span-btn {
+    font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--color-2);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 100px;
+}
+
+.btns-container .span-tag {
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--color-2);
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 100px;
+}
+
+.case-toggle-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--color-3);
+    color: white;
+    margin: 0.75rem 0 1.5rem 0;
+}
+
+.case-details {
+    display: grid;
+    grid-template-rows: 10rem;
+    position: relative;
+    transition: grid-template-rows 0.5s ease-in-out;
+}
+
+.case-details.is-open {
+    grid-template-rows: 1fr;
+}
+
+.case-details-inner {
+    overflow: hidden;
+    min-height: 0;
+}
+
+.case-fade {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 6rem;
+    background: linear-gradient(to bottom, transparent, var(--back-color));
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.case-details.is-open .case-fade {
+    opacity: 0;
+}
+
 button{
     border-style: none;
     background-color: gray;
     color: white;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     padding: 0.5rem;
 
 }
@@ -222,6 +307,7 @@ h2 {
 
 h3 {
     font-size: 2rem;
+    margin: 1.25rem 0;
 }
 
 h4 {
@@ -246,10 +332,10 @@ p, span, ul, button {
 .row {
     width: 100%;
     display: grid;
-    grid-template-columns: 15% 1% 84%;
+    grid-template-columns: 10% 1% 89%;
     gap: 1rem;
     align-items: start;
-    margin-bottom: 1.5rem;
+    margin: 1rem 0;
 }
 
 .first-line, .second-line, .third-line {
@@ -274,10 +360,34 @@ p, span, ul, button {
     animation-delay: 3s;
 }
 
-.first-arrow {
+// Wraps the arrow: holds the 80px gap from the text above, gives the arrow room to sit
+// vertically centered within, and is the element the scroll-linked drift (useDrift) is
+// applied to -- kept separate from the entrance-animation element below so the two
+// independent transforms (JS drift vs CSS keyframe) don't collide on the same node.
+.scroll-cue-arrow-slot {
+    margin-top: 80px;
+    min-height: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.scroll-cue-arrow {
     opacity: 0;
     animation: slideInDown 1s ease-out forwards;
     animation-delay: 5s;
+}
+
+// Same slideInDown entrance, but played when the element is scrolled into view (see
+// useRevealOnView) rather than on a fixed page-load delay -- for arrows far below the
+// fold, where a fixed delay would have already elapsed before anyone scrolls there.
+.scroll-cue-arrow--on-view {
+    opacity: 0;
+    transform: translateY(-50px);
+}
+
+.scroll-cue-arrow--on-view.is-visible {
+    animation: slideInDown 1s ease-out forwards;
 }
 .span-btn {
     position: relative;
@@ -286,6 +396,7 @@ p, span, ul, button {
     text-decoration: none; /* so we can control underline manually */
     font-size: 1.1rem;
     padding: 0.2rem 0; /* some space for the underline */
+    cursor: pointer;
 }
 
 /* Create the "underline" as a pseudo-element */
@@ -364,14 +475,6 @@ p, span, ul, button {
         margin-left: -5%;
         width: 100vw !important;
     }
-    .row {
-        width: 100%;
-        display: grid;
-        grid-template-columns: 100%;
-        gap: 0.25rem;
-        align-items: start;
-        margin-bottom: 1.5rem;
-    }
 }
 
 @media (max-width: 1048px) {
@@ -430,4 +533,16 @@ p, span, ul, button {
     .sun-container {
         height: 10%;
     }
+  .row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 100%;
+    gap: 0.25rem;
+    align-items: start;
+    margin-bottom: 1.5rem;
+  }
+
+  .row .line {
+    display: none;
+  }
 }

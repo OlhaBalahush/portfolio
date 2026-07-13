@@ -14,10 +14,10 @@ interface ProjectsComponentProps {
 const ProjectsComponent: React.FC<ProjectsComponentProps> = ({ textEnter, textLeave, linkEnter }) => {
 
     return (
-        <div className="page rows-page">
+        <div className="page rows-page" style={{marginTop: '4rem', marginBottom: '4rem'}}>
 
 
-            <h5 onMouseEnter={textEnter} onMouseLeave={textLeave}>School projects</h5>
+            <h5 onMouseEnter={textEnter} onMouseLeave={textLeave}>Earlier & personal projects</h5>
             <div className="horizontal-line"></div>
             <div className='projects-container'>
                 <ProjectComponent

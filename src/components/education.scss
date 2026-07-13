@@ -2,6 +2,15 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+// Scoped to Education only (not Projects cards, which also share .rows-page but keep
+// their intentional alternating left/right layout) -- centers the content vertically in
+// the middle of the section's height, instead of sitting at the top with empty space below.
+.education-page {
+    justify-content: center;
 }
 
 .education-box {

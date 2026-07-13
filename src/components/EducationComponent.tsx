@@ -21,7 +21,7 @@ const EducationComponent: React.FC<EducationComponentProps> = ({ textEnter, text
     const handleMouseLeave = () => setHoveredIndex(null);
 
     return (
-        <div className="page rows-page">
+        <div className="page rows-page education-page">
             <h1 onMouseEnter={textEnter} onMouseLeave={textLeave} className='title'>Education</h1>
             <div className="educations-container">
                 {educationData.map((title, i) => (

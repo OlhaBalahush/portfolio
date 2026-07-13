@@ -1,9 +1,8 @@
-import React, {useState, useEffect, useRef, useLayoutEffect} from 'react';
+import React, {useState, useEffect, useLayoutEffect, useRef} from 'react';
 import './app.scss';
-import { motion, Variants } from 'framer-motion';
+import { motion, useMotionValue, useSpring, Variants } from 'framer-motion';
 import IntroComponent from './components/IntroComponent';
 import ContactMeComponent from './components/ContactMeComponent';
-import { IParallax, Parallax, ParallaxLayer } from '@react-spring/parallax'
 import EducationComponent from './components/EducationComponent';
 import AboutTextComponent from './components/AboutTextcomponent'
 import SkillsComponent from './components/SkillsComponent';
@@ -12,16 +11,34 @@ import ByeComponent from './components/LastPageComponent';
 import HeaderComponent from './components/HeaderComponent';
 import './components/project.scss'
 
+// The intro's entrance animation and the arrow reveals are timed from page load / scroll
+// position, so if the browser restores the previous scroll position on reload (the
+// default in Chrome/Firefox), you'd land mid-page while those animations assume you're
+// at the top. Opting out here so a reload always starts clean, at the top, animations
+// replaying -- runs once at module load, well before mount.
+if (typeof window !== 'undefined' && 'scrollRestoration' in window.history) {
+  window.history.scrollRestoration = 'manual';
+}
+
+const CURSOR_HALF_SIZE: Record<string, number> = {
+  default: 16,
+  text: 50,
+  link: 50,
+  iconWithText: 25,
+};
+
 function App() {
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+   const rawCursorX = useMotionValue(-100);
+  const rawCursorY = useMotionValue(-100);
+  // A touch of spring smoothing on top of the raw, per-frame position -- tight enough
+  // stiffness/damping that it still reads as precise, not laggy.
+  const cursorX = useSpring(rawCursorX, { stiffness: 800, damping: 40, mass: 0.5 });
+  const cursorY = useSpring(rawCursorY, { stiffness: 800, damping: 40, mass: 0.5 });
+  const cursorOffsetRef = useRef(CURSOR_HALF_SIZE.default);
   const [cursorVariant, setCursorVariant] = useState('default');
 
-  const ref = useRef<IParallax>(null);
-
   const CASE_STUDY_COUNT = 4;
-  const FALLBACK_CASE_STUDY_FACTOR = 4;
 
-  const caseStudyRefs = useRef<Array<HTMLDivElement | null>>([]);
   const caseStudy1ResearchRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudy1IdeationRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudy1PrototypingRef = useRef<HTMLHeadingElement | null>(null);
@@ -48,104 +65,23 @@ function App() {
   const caseStudy3StickRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudy3ImpactRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudy3RetroRef = useRef<HTMLHeadingElement | null>(null);
-  const [caseStudyFactors, setCaseStudyFactors] = useState<number[]>(
-      () => Array(CASE_STUDY_COUNT).fill(FALLBACK_CASE_STUDY_FACTOR)
+
+  const [expandedCases, setExpandedCases] = useState<boolean[]>(
+      () => Array(CASE_STUDY_COUNT).fill(false)
   );
-  // Bumped on every real measurement (initial + every resize) to force the Parallax to remount,
-  // since react-spring/parallax freezes each layer's offset/speed/factor at first mount.
-  const [layoutGeneration, setLayoutGeneration] = useState(0);
+  const toggleCase = (i: number) => {
+    setExpandedCases(prev => prev.map((v, idx) => (idx === i ? !v : v)));
+  };
 
-  useLayoutEffect(() => {
-    let cancelled = false;
-    let rafId = 0;
-    let resizeTimeout: ReturnType<typeof setTimeout> | undefined;
-    let cleanupImageListeners = () => {};
-
-    const finalize = () => {
-      if (cancelled) return;
-      const viewportHeight = window.innerHeight;
-      setCaseStudyFactors(caseStudyRefs.current.map(el => (el as HTMLDivElement).scrollHeight / viewportHeight));
-      setLayoutGeneration(g => g + 1);
-    };
-
-    // Parallax only mounts its ParallaxLayer children (and their refs) one tick after
-    // it mounts itself, so keep polling until every case-study ref has actually attached.
-    // Used for both the initial measurement AND every resize — a resize can fire before images
-    // have finished (re)loading, and measuring early locks in a too-short height that only gets
-    // fixed if something re-measures afterward, which made the bug depend on load timing/reloads.
-    const measureWhenReady = () => {
-      if (cancelled) return;
-      cleanupImageListeners();
-
-      const refs = caseStudyRefs.current;
-      const allAttached = refs.length === CASE_STUDY_COUNT && refs.every(Boolean);
-      if (!allAttached) {
-        rafId = requestAnimationFrame(measureWhenReady);
-        return;
-      }
-
-      const images = refs.flatMap(el => Array.from((el as HTMLDivElement).querySelectorAll('img')));
-      const pending = images.filter(img => !img.complete);
-
-      if (pending.length === 0) {
-        finalize();
-        return;
-      }
-
-      let remaining = pending.length;
-      const onLoad = () => {
-        remaining -= 1;
-        if (remaining === 0) finalize();
-      };
-      pending.forEach(img => {
-        img.addEventListener('load', onLoad, { once: true });
-        img.addEventListener('error', onLoad, { once: true });
-      });
-      cleanupImageListeners = () => {
-        pending.forEach(img => {
-          img.removeEventListener('load', onLoad);
-          img.removeEventListener('error', onLoad);
-        });
-      };
-    };
-
-    // Case-study height depends on viewport width (text reflows narrower/taller), so a resize
-    // (window resize, devtools device toolbar, orientation change) needs a fresh measurement —
-    // debounced so it only fires once the resize has settled, not on every intermediate frame.
-    const onResize = () => {
-      clearTimeout(resizeTimeout);
-      resizeTimeout = setTimeout(measureWhenReady, 200);
-    };
-
-    measureWhenReady();
-    window.addEventListener('resize', onResize);
-    return () => {
-      cancelled = true;
-      cancelAnimationFrame(rafId);
-      cleanupImageListeners();
-      clearTimeout(resizeTimeout);
-      window.removeEventListener('resize', onResize);
-    };
-  }, []);
-
-  const ABOUT_OFFSET = 1.1;
-  const PROJECTS_TITLE_OFFSET = 1.9;
-  const FIRST_CASE_STUDY_OFFSET = PROJECTS_TITLE_OFFSET + 0.2;
-
-  const caseStudyOffsets: number[] = [];
-  let runningOffset = FIRST_CASE_STUDY_OFFSET;
-  for (let i = 0; i < CASE_STUDY_COUNT; i++) {
-    caseStudyOffsets.push(runningOffset);
-    runningOffset += caseStudyFactors[i];
-  }
-  // ProjectsComponent uses speed=0.3 + a fixed 4-page box with vertically-centered content, so its
-  // content starts appearing on screen a bit before its own `offset`, give it lead room to clear
-  // the previous case study first.
-  const projectsCardsOffset = runningOffset + 2;
-  const educationOffset = projectsCardsOffset + 2.05;
-  const byeOffset = educationOffset + 0.85;
-  const arrowOffset = byeOffset + 0.65;
-  const totalPages = byeOffset + 1;
+  // Normal document flow, so a nav click just scrolls the targeted section into view (no
+  // page-offset math needed). The drift-effect sections reuse their drift ref as the nav
+  // target; Bye has no drift (speed 0), so it gets its own plain ref.
+  const introDrift = useRef<HTMLDivElement>(null);
+  const aboutDrift = useRef<HTMLDivElement>(null);
+  const projectsTitleDrift = useRef<HTMLDivElement>(null);
+  const projectsCardsDrift = useRef<HTMLDivElement>(null);
+  const educationDrift = useRef<HTMLDivElement>(null);
+  const byeRef = useRef<HTMLDivElement>(null);
 
 
   const textEnter = () => setCursorVariant('text')
@@ -153,16 +89,28 @@ function App() {
   const iconEnter = () => setCursorVariant('iconWithText')
   const textLeave = () => setCursorVariant('default')
 
+  useLayoutEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   useEffect(() => {
-    const mouseMove = (e: { clientX: any; clientY: any; }) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+    cursorOffsetRef.current = CURSOR_HALF_SIZE[cursorVariant] ?? CURSOR_HALF_SIZE.default;
+  }, [cursorVariant]);
+
+  useEffect(() => {
+    // Position the cursor dot directly via motion values instead of React state, so
+    // tracking the mouse doesn't re-render the whole (large) App tree on every pixel
+    // of movement -- that was the source of the visible lag/jank.
+    const mouseMove = (e: { clientX: number; clientY: number; }) => {
+      rawCursorX.set(e.clientX - cursorOffsetRef.current);
+      rawCursorY.set(e.clientY - cursorOffsetRef.current);
     };
 
     window.addEventListener('mousemove', mouseMove);
     return () => {
       window.removeEventListener('mousemove', mouseMove);
     };
-  }, []);
+  }, [rawCursorX, rawCursorY]);
 
   useEffect(() => {
     // Disable scroll
@@ -188,38 +136,35 @@ function App() {
     default: {
       height: 32,
       width: 32,
-      backgroundColor: 'black',
-      x: mousePosition.x - 16,
-      y: mousePosition.y - 16
+      backgroundColor: 'rgb(0, 0, 0)',
+      mixBlendMode: 'normal',
+      display: 'block',
     },
     text: {
       height: 100,
       width: 100,
-      x: mousePosition.x - 50,
-      y: mousePosition.y - 50,
-      backgroundColor: 'white',
-      mixBlendMode: "difference"
+      backgroundColor: 'rgb(255, 255, 255)',
+      mixBlendMode: 'difference',
+      display: 'block',
     },
     link: {
       height: 100,
       width: 100,
-      x: mousePosition.x - 50,
-      y: mousePosition.y - 50,
-      // mixBlendMode: "difference"
+      backgroundColor: 'rgb(0, 0, 0)',
+      mixBlendMode: 'normal',
       display: window.innerWidth <= 1048 ? 'none' : 'flex',
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: '50%',
-      color: 'white', // Text color
+      color: 'rgb(255, 255, 255)', // Text color
       fontSize: '12px',
     },
     iconWithText: {
       height: 50, // adjust size as needed
       width: 50,  // adjust size as needed
-      x: mousePosition.x - 25, // adjust for the new size
-      y: mousePosition.y - 25, // adjust for the new size
       backgroundColor: 'rgba(0, 0, 0, 0.7)', // semi-transparent background
-      color: 'white', // text color
+      mixBlendMode: 'normal',
+      color: 'rgb(255, 255, 255)', // text color
       display: window.innerWidth <= 1048 ? 'none' : 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -230,8 +175,8 @@ function App() {
 
   const [isOpen, setIsOpen ] = useState(false);
 
-  function handleNav(navigateTo: number) {
-    ref.current?.scrollTo(navigateTo)
+  function handleNav(target: React.RefObject<HTMLElement>) {
+    target.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
     setIsOpen(false)
   }
 
@@ -246,6 +191,8 @@ function App() {
               position: 'fixed',
               pointerEvents: 'none',
               zIndex: 9999,
+              x: cursorX,
+              y: cursorY,
             }}
         >
           {cursorVariant === 'link' && (
@@ -255,7 +202,7 @@ function App() {
 
         <header className="glassmorphism">
           <span className="span-btn" key={4} onMouseEnter={textEnter} onMouseLeave={textLeave}
-                onClick={() => ref.current?.scrollTo(0)}>Olha Balahush</span>
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Olha Balahush</span>
           <button
               className="hamburger-menu"
               onClick={() => setIsOpen(!isOpen)}
@@ -278,13 +225,13 @@ function App() {
           </button>
           <div className="navs-container">
             <span className="span-btn" key={0} onMouseEnter={textEnter} onMouseLeave={textLeave}
-                  onClick={() => ref.current?.scrollTo(ABOUT_OFFSET - 0.25)}>About</span>
+                  onClick={() => aboutDrift.current?.scrollIntoView({behavior: 'smooth', block: 'center'})}>About</span>
             <span className="span-btn" key={1} onMouseEnter={textEnter} onMouseLeave={textLeave}
-                  onClick={() => ref.current?.scrollTo(PROJECTS_TITLE_OFFSET - 0.35)}>Projects</span>
+                  onClick={() => projectsTitleDrift.current?.scrollIntoView({behavior: 'smooth', block: 'center'})}>Projects</span>
             <span className="span-btn" key={2} onMouseEnter={textEnter} onMouseLeave={textLeave}
-                  onClick={() => ref.current?.scrollTo(educationOffset - 0.35)}>Education</span>
+                  onClick={() => educationDrift.current?.scrollIntoView({behavior: 'smooth', block: 'center'})}>Education</span>
             <span className="span-btn" key={3} onMouseEnter={textEnter} onMouseLeave={textLeave}
-                  onClick={() => ref.current?.scrollTo(byeOffset)}>Contact</span>
+                  onClick={() => byeRef.current?.scrollIntoView({behavior: 'smooth', block: 'center'})}>Contact</span>
           </div>
         </header>
 
@@ -306,283 +253,71 @@ function App() {
                 transition={{duration: 0.3}}
             >
                 <span className="span-btn" key={0} onMouseEnter={textEnter} onMouseLeave={textLeave}
-                      onClick={() => handleNav(ABOUT_OFFSET - 0.25)}>About</span>
+                      onClick={() => handleNav(aboutDrift)}>About</span>
               <span className="span-btn" key={1} onMouseEnter={textEnter} onMouseLeave={textLeave}
-                    onClick={() => handleNav(PROJECTS_TITLE_OFFSET - 0.35)}>Projects</span>
+                    onClick={() => handleNav(projectsTitleDrift)}>Projects</span>
               <span className="span-btn" key={2} onMouseEnter={textEnter} onMouseLeave={textLeave}
-                    onClick={() => handleNav(educationOffset - 0.35)}>Education</span>
+                    onClick={() => handleNav(educationDrift)}>Education</span>
               <span className="span-btn" key={3} onMouseEnter={textEnter} onMouseLeave={textLeave}
-                    onClick={() => handleNav(byeOffset)}>Contact</span>
+                    onClick={() => handleNav(byeRef)}>Contact</span>
             </motion.div>
         )}
 
         <div className='App'>
-          <Parallax key={layoutGeneration} pages={totalPages} ref={ref}>
-            <ParallaxLayer
-                offset={0}
-                speed={0.5}>
+          <div className="scroll-page">
+            <div ref={introDrift}>
               <IntroComponent textEnter={textEnter} textLeave={textLeave}/>
-            </ParallaxLayer>
+            </div>
 
-            <ParallaxLayer
-                offset={0.8}
-                speed={0.05}>
-              <div className="first-arrow">
-                <svg
-                    className='to-page-center arrow'
-                    width="38" height="103" viewBox="0 0 38 103" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                      d="M17.2322 101.768C18.2085 102.744 19.7915 102.744 20.7678 101.768L36.6777 85.8579C37.654 84.8816 37.654 83.2986 36.6777 82.3223C35.7014 81.346 34.1184 81.346 33.1421 82.3223L19 96.4645L4.85787 82.3223C3.88156 81.346 2.29864 81.346 1.32233 82.3223C0.346023 83.2986 0.346023 84.8816 1.32233 85.8579L17.2322 101.768ZM16.5 1.09278e-07L16.5 100L21.5 100L21.5 -1.09278e-07L16.5 1.09278e-07Z"
-                      fill="black"/>
-                </svg>
-              </div>
-            </ParallaxLayer>
+            <div className="page ux-cases-page section-min-height" ref={aboutDrift}>
+              <h1 onMouseEnter={textEnter} onMouseLeave={textLeave}>About</h1>
+              <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Product Designer & Engineer with over 2 years of experience in a startup environment. I dig into the user's problem from different angles, brainstorm with cross-functional teams to choose the strongest solution, then experiment fast to learn and iterate. Alongside that, I build design systems that save teams time and keep the product consistent.</p>
+              <h5 onMouseEnter={textEnter} onMouseLeave={textLeave}>Current Focus</h5>
+              <div className="horizontal-line"></div>
+              <p onMouseEnter={textEnter} onMouseLeave={textLeave}>I'm currently working on rethinking the cohort overview for admins on a peer-to-peer studying platform, a project that started with a vague NPS complaint about complexity. I took the initiative to shadow clients directly, which turned that vague signal into much clearer information architecture and usability issues. One stood out: admins couldn't tell how a cohort was doing without guessing their way through the curriculum structure. The redesign and first round of usability testing are complete, and the team is now iterating toward MVP.</p>
+            </div>
 
-            <ParallaxLayer
-                offset={ABOUT_OFFSET}
-                speed={0.4}
-                factor={4}
-            >
-              <div className="page ux-cases-page">
-                <h1 onMouseEnter={textEnter} onMouseLeave={textLeave}>About</h1>
-                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Product Designer & Engineer with over 2 years of experience in a startup environment. I focus on understanding the user's problem from different angles, brainstorming with cross-functional teams to choose the strongest solution, then experimenting fast to learn and iterate. Alongside that, I build strong design systems that save teams time and keep consistency across the product.</p>
-                <h5 onMouseEnter={textEnter} onMouseLeave={textLeave}>Current Focus</h5>
-                <div className="horizontal-line"></div>
-                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>I'm currently working on rethinking the cohort overview for admins on a peer-to-peer studying platform, a project that started with a vague NPS complaint about complexity. I took the initiative to shadow clients directly, which turned that vague signal into much clearer information architecture and usability issues. One stood out: admins couldn't tell how a cohort was doing without guessing their way through the curriculum structure. The redesign and first round of usability testing are complete, and the team is now iterating toward MVP.</p>
-              </div>
-            </ParallaxLayer>
-
-            <ParallaxLayer
-                offset={PROJECTS_TITLE_OFFSET}
-                speed={0.1}
-                factor={4}>
-              <div className="page">
+            <div className="page ux-cases-page section-min-height" ref={projectsTitleDrift}>
                 <h1 onMouseEnter={textEnter} onMouseLeave={textLeave} className='title'>Projects</h1>
-              </div>
-            </ParallaxLayer>
-
-            <ParallaxLayer
-                offset={caseStudyOffsets[3]}
-                speed={0}
-                factor={caseStudyFactors[3]}>
-              <div className="page ux-cases-page" ref={el => caseStudyRefs.current[3] = el}>
-                <div className="row">
-                  <h1 className='pr-num' onMouseEnter={textEnter} onMouseLeave={textLeave}>04</h1>
-                  <div className=""></div>
-                  <h2 onMouseEnter={textEnter} onMouseLeave={textLeave}>Integration of Community into the hybrid peer-to-peer studying platform</h2></div>
-
-                <div className="btns-container">
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudy1ResearchRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Research Phase
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudy1IdeationRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Ideation & Solution Design
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudy1PrototypingRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Prototyping & Testing
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudy1MvpRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>MVP Launch – Fake Door Experiment
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudy1ConclusionRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Conclusion & Impact
-                  </button>
-                </div>
-
-                <div className="pic-container prev full">
-                  <img src={`${process.env.PUBLIC_URL + '/community.png'}`} alt="Community feature integrated into the hybrid peer-to-peer studying platform"></img>
-                </div>
-
-                <div className="row" onMouseEnter={textEnter} onMouseLeave={textLeave}>
-                  <h6>Overview</h6>
-                  <div className="line"></div>
-                  <p>The goal of this research was to understand what causes a lack of motivation in students, as
-                    inactivity
-                    was a major issue observed on the platform.
-                    Through secondary research, I analyzed existing studies and research papers related to student
-                    engagement, motivation, and online learning behavior. This helped me identify key themes and gaps
-                    that
-                    required further exploration through user interviews</p>
-                </div>
-
-                <h5 onMouseEnter={textEnter} onMouseLeave={textLeave}>User Interviews</h5>
-
-                <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/UR-summary.png'}`} alt="Summary of findings from student user interviews"></img>
-                </div>
-
-                <div className="row" onMouseEnter={textEnter} onMouseLeave={textLeave}>
-                  <h6>Objective</h6>
-                  <div className="line"></div>
-                  <p>The user interviews were designed to:
-                    <ul>
-                      <li>Gain insights into students' study experiences</li>
-                      <li>Understand what motivates students</li>
-                      <li>Identify the obstacles students face while studying</li>
-                      <li>Uncover key pain points</li>
-                      <li>Validate assumptions about user personas</li>
-                    </ul>
-                  </p>
-                </div>
-
-                <div className="row" onMouseEnter={textEnter} onMouseLeave={textLeave}>
-                  <h6>Methodology</h6>
-                  <div className="line"></div>
-                  <p>A semi-structured interview format was chosen, allowing flexibility to explore deeper insights into
-                    students’ pain points and motivations</p>
-                </div>
-
-                <div className="row" onMouseEnter={textEnter} onMouseLeave={textLeave}>
-                  <h6>Key Findings</h6>
-                  <div className="line"></div>
-                  <p>After conducting user interviews, the most prominent pain point emerged:
-                    <br></br>
-                    Lack of community feeling among students—Many students felt isolated in their learning journey,
-                    which
-                    negatively impacted motivation and engagement</p>
-                </div>
-
-                <h4 ref={caseStudy1IdeationRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>Ideation & Solution Design</h4>
-
-                <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/brainstorming.png'}`} alt="Brainstorming session notes for the community feature ideation"></img>
-                </div>
-
-                <h5 onMouseEnter={textEnter} onMouseLeave={textLeave}>Brainstorming</h5>
-
-                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>To generate solutions, I facilitated a
-                  brainstorming session with team members, including product
-                  managers, engineers, and designers. Key areas of focus included:</p>
-                <ul onMouseEnter={textEnter} onMouseLeave={textLeave}>
-                  <li>Collaboration & study groups</li>
-                  <li>Mentorship opportunities</li>
-                  <li>Job preparation support</li>
-                  <li>Progress tracking & engagement features</li>
-                </ul>
-                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Top ideas generated included:</p>
-                <ul onMouseEnter={textEnter} onMouseLeave={textLeave}>
-                  <li>Teammate search feature – Helps students find study partners</li>
-                  <li>Project showcase system – Allows students to share and discuss their work</li>
-                  <li>Alumni & partner mentorship system – Connects students with industry professionals</li>
-                  <li>Community-driven events – Organizing hackathons, study groups, and networking events</li>
-                </ul>
-
-                <h4 ref={caseStudy1PrototypingRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>Prototyping & Testing</h4>
-
-                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Before developing a full-fledged solution, I
-                  created low-fidelity wireframes to map out the key
-                  user
-                  flows and interactions. After iterating based on internal feedback, I refined them into
-                  high-fidelity
-                  prototypes for usability testing</p>
-
-                <div className="pic-container full">
-                  <img src={`${process.env.PUBLIC_URL + '/testing.png'}`} alt="High-fidelity prototype used for usability testing"></img>
-                </div>
-
-                <div className="row" onMouseEnter={textEnter} onMouseLeave={textLeave}>
-                  <h6>Usability Testing</h6>
-                  <div className="line"></div>
-                  <p>A moderated usability test with real users was conducted to validate design choices. Key takeaways
-                    included:
-                    <ul>
-                      <li>A clearer user onboarding process for the new feature</li>
-                      <li>More intuitive navigation for finding study partners</li>
-                      <li>Better integration of the community aspect within the platform</li>
-                    </ul>
-                  </p>
-                </div>
-
-                <h4 ref={caseStudy1MvpRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>MVP Launch – Fake Door Experiment</h4>
-
-                <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/fake-door.png'}`} alt="Fake door test screen for the teammate search feature"></img>
-                </div>
-
-                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>To test user interest in the teammate search
-                  feature, we implemented a Fake Door Test:</p>
-                <ul onMouseEnter={textEnter} onMouseLeave={textLeave}>
-                  <li>A simple student list was added to specific tasks</li>
-                  <li>A trackable button allowed users to explore potential study partners</li>
-                </ul>
-
-                <h5 onMouseEnter={textEnter} onMouseLeave={textLeave}>Results & Key Takeaways</h5>
-
-
-                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>40% of users engaged with the feature within a
-                  week. The strong engagement validated the need for a
-                  fully developed teammate search feature. Based on these insights, we proceeded with full
-                  development</p>
-
-                <h4 ref={caseStudy1ConclusionRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>Conclusion & Impact</h4>
-
-                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>By integrating community features into the studying
-                  platform, we addressed a critical engagement
-                  issue,
-                  helping students feel more connected in their learning journey.</p>
-                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Key Outcomes:</p>
-                <ul onMouseEnter={textEnter} onMouseLeave={textLeave}>
-                  <li>Higher student activity post-launch</li>
-                  <li>Increased peer collaboration and study group formation</li>
-                  <li>Positive user feedback on mentorship and networking opportunities</li>
-                </ul>
-
-                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Next Steps & Future Improvements:</p>
-                <ul onMouseEnter={textEnter} onMouseLeave={textLeave}>
-                  <li>Refine the teammate search feature with filters and AI-driven suggestions</li>
-                  <li>Expand the mentorship program with structured events and industry partnerships</li>
-                  <li>Enhance gamification & progress tracking elements to boost long-term engagement</li>
-                </ul>
-              </div>
-            </ParallaxLayer>
-
-            <ParallaxLayer
-                offset={caseStudyOffsets[0]}
-                speed={0}
-                factor={caseStudyFactors[0]}>
-              <div className="page ux-cases-page" ref={el => caseStudyRefs.current[0] = el}>
-                <h5 onMouseEnter={textEnter} onMouseLeave={textLeave}>Study cases</h5>
+                <h5 onMouseEnter={textEnter} onMouseLeave={textLeave}>Case studies</h5>
                 <div className="horizontal-line"></div>
-                <div className="row">
+                <div className="row" style={{marginTop: '4rem'}}>
                   <h1 className='pr-num' onMouseEnter={textEnter} onMouseLeave={textLeave}>01</h1>
                   <div className=""></div>
-                  <h2 onMouseEnter={textEnter} onMouseLeave={textLeave}>Redesigning School Policy Management</h2>
+                  <div className="title-container">
+                  <h2 onMouseEnter={textEnter} onMouseLeave={textLeave}>Redesigning school policy management</h2>
+                    <div className="btns-container">
+                  <span className="span-tag" onMouseEnter={textEnter} onMouseLeave={textLeave}>Overview
+                  </span>
+                  <span className="span-tag" onMouseEnter={textEnter} onMouseLeave={textLeave}>The problem
+                  </span>
+                  <span className="span-tag" onMouseEnter={textEnter} onMouseLeave={textLeave}>The process
+                  </span>
+                  <span className="span-tag" onMouseEnter={textEnter} onMouseLeave={textLeave}>Key decisions
+                  </span>
+                  <span className="span-tag" onMouseEnter={textEnter} onMouseLeave={textLeave}>Team impact
+                  </span>
+                  <span className="span-tag" onMouseEnter={textEnter} onMouseLeave={textLeave}>Outcome
+                  </span>
+                  <span className="span-tag" onMouseEnter={textEnter} onMouseLeave={textLeave}>Retrospective
+                  </span>
+                </div>
+                  </div>
+                </div>
+                <div className="pic-container prev">
+                    <img src={`${process.env.PUBLIC_URL + '/policy-preview.png'}`} alt="Overview of inconsistencies across the product before the design system was introduced"></img>
                 </div>
 
-                <div className="btns-container">
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudy2OverviewRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Overview
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudy2ProblemRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>The Problem
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudy2ProcessRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>The Process
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudy2DecisionsRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Key Decisions
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudy2TeamImpactRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Team Impact
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudy2OutcomeRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Outcome
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudy2RetroRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Retrospective
-                  </button>
-                </div>
-
-                <div className="row" onMouseEnter={textEnter} onMouseLeave={textLeave}>
-                  <h6 ref={caseStudy2OverviewRef}>Overview</h6>
-                  <div className="line"></div>
-                  <p>A roadmap item that read like a simple feature
+                  <p onMouseEnter={textEnter} onMouseLeave={textLeave}>A roadmap item that read like a simple feature
                     request ended up costing three months of work once it shipped and failed with both students and
                     admins. Going back to an older, recurring complaint, I skipped building from the request as written
                     and instead mapped out real client quotes to find what was actually going on. From there, I ran
                     research, a brainstorming session, and with the team we shipped an MVP that cut down the manual
                     work admins were doing.</p>
-                </div>
+
+                <div className={`case-details ${expandedCases[0] ? 'is-open' : ''}`}>
+                <div className="case-fade"></div>
+                <div className="case-details-inner">
 
                 <h4 ref={caseStudy2ProblemRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>What problem did we face?</h4>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>During my 2 years work at the startup, we once
@@ -737,48 +472,43 @@ function App() {
                     actually meant, that was left undefined for the team, and still unresolved when I left the
                     project.</li>
                 </ol>
+                </div>
+                </div>
+                <button className={`case-toggle-btn ${expandedCases[0] ? 'is-open' : ''}`} onMouseEnter={linkEnter} onMouseLeave={textLeave}
+                        onClick={() => toggleCase(0)}>
+                  {expandedCases[0] ? 'Close case study' : 'Read case study'}
+                </button>
               </div>
-            </ParallaxLayer>
 
-            <ParallaxLayer
-                offset={caseStudyOffsets[1]}
-                speed={0}
-                factor={caseStudyFactors[1]}>
-              <div className="page ux-cases-page" ref={el => caseStudyRefs.current[1] = el}>
-                <div className="row">
+            <div className="page ux-cases-page">
+
+                <div className="row" style={{marginTop: '4rem'}}>
                   <h1 className='pr-num' onMouseEnter={textEnter} onMouseLeave={textLeave}>02</h1>
                   <div className=""></div>
-                  <h2 onMouseEnter={textEnter} onMouseLeave={textLeave}>Redesigning the Cohort Information Architecture</h2>
+                    <div className="title-container">
+                        <h2 onMouseEnter={textEnter} onMouseLeave={textLeave}>Redesigning the cohort information architecture</h2>
+                        <div className="btns-container">
+                  <span className="span-btn" onMouseEnter={textEnter} onMouseLeave={textLeave}>Overview
+                  </span>
+                  <span className="span-btn" onMouseEnter={textEnter} onMouseLeave={textLeave}>Where It Came From
+                  </span>
+                  <span className="span-btn" onMouseEnter={textEnter} onMouseLeave={textLeave}>Prioritization
+                  </span>
+                  <span className="span-btn" onMouseEnter={textEnter} onMouseLeave={textLeave}>Design Depths
+                  </span>
+                  <span className="span-btn" onMouseEnter={textEnter} onMouseLeave={textLeave}>Testing
+                  </span>
+                  <span className="span-btn" onMouseEnter={textEnter} onMouseLeave={textLeave}>Status
+                  </span>
+                  <span className="span-btn" onMouseEnter={textEnter} onMouseLeave={textLeave}>Retrospective
+                  </span>
                 </div>
-
-                <div className="btns-container">
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudyCohortOverviewRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Overview
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudyCohortSourceRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Where It Came From
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudyCohortNextRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Prioritization
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudyCohortDesignRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Design Depths
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudyCohortTestingRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Testing
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudyCohortStatusRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Status
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudyCohortRetroRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Retrospective
-                  </button>
+                    </div>
                 </div>
-
-                <div className="row" onMouseEnter={textEnter} onMouseLeave={textLeave}>
-                  <h6 ref={caseStudyCohortOverviewRef}>Overview</h6>
-                  <div className="line"></div>
-                  <p>NPS scores kept flagging that admins found the
+                <div className="pic-container prev">
+                    <img src={`${process.env.PUBLIC_URL + '/cohort-preview.png'}`} alt="Overview of inconsistencies across the product before the design system was introduced"></img>
+                </div>
+                  <p onMouseEnter={textEnter} onMouseLeave={textLeave}>NPS scores kept flagging that admins found the
                     platform too complicated to navigate and find information in. Looking for an answer to what exactly
                     was wrong just uncovered a gap in understanding admins' use cases, which turned out to be crucial
                     to support the flows properly. I ran shadowing sessions to find out, which surfaced much clearer
@@ -786,7 +516,10 @@ function App() {
                     way through the curriculum structure. I prioritized this as the biggest pain point noticed across
                     all clients, ran a first round of usability testing on a redesigned cohort overview, and the
                     project is continuing toward MVP development.</p>
-                </div>
+
+                <div className={`case-details ${expandedCases[1] ? 'is-open' : ''}`}>
+                <div className="case-fade"></div>
+                <div className="case-details-inner">
 
                 <h4 ref={caseStudyCohortSourceRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>Where did the problem come from?</h4>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>The starting signal was NPS. Admins kept saying
@@ -901,58 +634,57 @@ function App() {
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>I'd validate earlier. I spent more time than I
                   needed polishing the design before the first round of testing, testing sooner would have surfaced
                   the same issues faster, with less invested in a direction before I knew whether it was right.</p>
+                </div>
+                </div>
+                <button className={`case-toggle-btn ${expandedCases[1] ? 'is-open' : ''}`} onMouseEnter={linkEnter} onMouseLeave={textLeave}
+                        onClick={() => toggleCase(1)}>
+                  {expandedCases[1] ? 'Close case study' : 'Read case study'}
+                </button>
               </div>
-            </ParallaxLayer>
 
-            <ParallaxLayer
-                offset={caseStudyOffsets[2]}
-                speed={0}
-                factor={caseStudyFactors[2]}>
-              <div className="page ux-cases-page" ref={el => caseStudyRefs.current[2] = el}>
-                <div className="row">
+            <div className="page ux-cases-page">
+
+                <div className="row" style={{marginTop: '4rem'}}>
                   <h1 className='pr-num' onMouseEnter={textEnter} onMouseLeave={textLeave}>03</h1>
                   <div className=""></div>
-                  <h2 onMouseEnter={textEnter} onMouseLeave={textLeave}>Building a Design System for a Long-Living Product</h2>
-                </div>
-
+                    <div className="title-container">
+                        <h2 onMouseEnter={textEnter} onMouseLeave={textLeave}>Building a design system for a long-living product</h2>
                 <div className="btns-container">
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudy3OverviewRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Overview
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudy3ProblemRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>The Problem
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudy3WhySoloRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Why Solo
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudy3StartRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Where I Started
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudy3StickRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Making It Stick
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudy3ImpactRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Team & Product Impact
-                  </button>
-                  <button onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                          onClick={() => caseStudy3RetroRef.current?.scrollIntoView({behavior: 'smooth', block: 'start'})}>Retrospective
-                  </button>
+                  <span className="span-btn" onMouseEnter={textEnter} onMouseLeave={textLeave}>Overview
+                  </span>
+                  <span className="span-btn" onMouseEnter={textEnter} onMouseLeave={textLeave}>The Problem
+                  </span>
+                  <span className="span-btn" onMouseEnter={textEnter} onMouseLeave={textLeave}>Why Solo
+                  </span>
+                  <span className="span-btn" onMouseEnter={textEnter} onMouseLeave={textLeave}>Where I Started
+                  </span>
+                  <span className="span-btn" onMouseEnter={textEnter} onMouseLeave={textLeave}>Making It Stick
+                  </span>
+                  <span className="span-btn" onMouseEnter={textEnter} onMouseLeave={textLeave}>Team & Product Impact
+                  </span>
+                  <span className="span-btn" onMouseEnter={textEnter} onMouseLeave={textLeave}>Retrospective
+                  </span>
+                </div>
+                    </div>
+                </div>
+                <div className="pic-container prev">
+                    <img src={`${process.env.PUBLIC_URL + '/ds-overview.png'}`} alt="Overview of inconsistencies across the product before the design system was introduced"></img>
                 </div>
 
-                <div className="row" onMouseEnter={textEnter} onMouseLeave={textLeave}>
-                  <h6 ref={caseStudy3OverviewRef}>Overview</h6>
-                  <div className="line"></div>
-                  <p>By the time a design system landed on my plate, the product had been growing without one for
+                  <p onMouseEnter={textEnter} onMouseLeave={textLeave}>By the time a design system landed on my plate, the product had been growing without one for
                     close to 3 years, colors, shades, buttons, layout patterns, even something as basic as when to
                     show a confirmation step were all inconsistent depending on who built what and when. I audited the
                     whole platform alone, rebuilt it from tokens up, and, the part I'm most proud of, turned the
                     system into an automated check inside the codebase itself, so it didn't just sit in Figma waiting
                     to be ignored.</p>
-                </div>
 
-                <div className="pic-container full">
-                    <img src={`${process.env.PUBLIC_URL + '/ds-overview.png'}`} alt="Overview of inconsistencies across the product before the design system was introduced"></img>
-                </div>
+                <div className={`case-details ${expandedCases[2] ? 'is-open' : ''}`}>
+                <div className="case-fade"></div>
+                <div className="case-details-inner">
+
+                {/*<div className="pic-container full">*/}
+                {/*    <img src={`${process.env.PUBLIC_URL + '/ds-overview.png'}`} alt="Overview of inconsistencies across the product before the design system was introduced"></img>*/}
+                {/*</div>*/}
 
                 <h4 ref={caseStudy3ProblemRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>What was going on for 3 years?</h4>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>3 years is a long time for a product to grow
@@ -1046,44 +778,201 @@ function App() {
                   years of accumulated decisions after the fact. Building from scratch and populating on demand is a
                   fundamentally different, much cheaper problem than untangling and standardizing years of
                   inconsistency after it's already baked into a live product used by real clients.</p>
+                </div>
+                </div>
+                <button className={`case-toggle-btn ${expandedCases[2] ? 'is-open' : ''}`} onMouseEnter={linkEnter} onMouseLeave={textLeave}
+                        onClick={() => toggleCase(2)}>
+                  {expandedCases[2] ? 'Close case study' : 'Read case study'}
+                </button>
               </div>
-            </ParallaxLayer>
 
-            <ParallaxLayer
-                offset={projectsCardsOffset}
-                speed={0.3}
-                factor={4}>
+            <div className="page ux-cases-page">
+                <div className="row" style={{marginTop: '4rem'}}>
+                  <h1 className='pr-num' onMouseEnter={textEnter} onMouseLeave={textLeave}>04</h1>
+                  <div className=""></div>
+                    <div className="title-container">
+                  <h2 onMouseEnter={textEnter} onMouseLeave={textLeave}>Integration of community into the hybrid peer-to-peer studying platform</h2>
+
+                <div className="btns-container">
+                  <span className="span-btn" onMouseEnter={textEnter} onMouseLeave={textLeave}>Research Phase
+                  </span>
+                  <span className="span-btn" onMouseEnter={textEnter} onMouseLeave={textLeave}>Ideation & Solution Design
+                  </span>
+                  <span className="span-btn" onMouseEnter={textEnter} onMouseLeave={textLeave}>Prototyping & Testing
+                  </span>
+                  <span className="span-btn" onMouseEnter={textEnter} onMouseLeave={textLeave}>MVP Launch – Fake Door Experiment
+                  </span>
+                  <span className="span-btn" onMouseEnter={textEnter} onMouseLeave={textLeave}>Conclusion & Impact
+                  </span>
+                </div>
+                </div>
+                </div>
+
+                <div className="pic-container prev">
+                <img src={`${process.env.PUBLIC_URL + '/community.png'}`} alt="Community feature integrated into the hybrid peer-to-peer studying platform"></img>
+                </div>
+
+                  <p onMouseEnter={textEnter} onMouseLeave={textLeave}>The goal of this research was to understand what causes a lack of motivation in students, as
+                    inactivity
+                    was a major issue observed on the platform.
+                    Through secondary research, I analyzed existing studies and research papers related to student
+                    engagement, motivation, and online learning behavior. This helped me identify key themes and gaps
+                    that
+                    required further exploration through user interviews</p>
+
+                <div className={`case-details ${expandedCases[3] ? 'is-open' : ''}`}>
+                <div className="case-fade"></div>
+                <div className="case-details-inner">
+
+                <h5 onMouseEnter={textEnter} onMouseLeave={textLeave}>User Interviews</h5>
+
+                <div className="pic-container">
+                  <img src={`${process.env.PUBLIC_URL + '/UR-summary.png'}`} alt="Summary of findings from student user interviews"></img>
+                </div>
+
+                <div className="row" onMouseEnter={textEnter} onMouseLeave={textLeave}>
+                  <h6>Objective</h6>
+                  <div className="line"></div>
+                <div>
+                  <p>The user interviews were designed to:</p>
+                  <ul>
+                    <li>Gain insights into students' study experiences</li>
+                    <li>Understand what motivates students</li>
+                    <li>Identify the obstacles students face while studying</li>
+                    <li>Uncover key pain points</li>
+                    <li>Validate assumptions about user personas</li>
+                  </ul>
+                </div>
+                </div>
+
+                <div className="row" onMouseEnter={textEnter} onMouseLeave={textLeave}>
+                  <h6>Methodology</h6>
+                  <div className="line"></div>
+                  <p>A semi-structured interview format was chosen, allowing flexibility to explore deeper insights into
+                    students’ pain points and motivations</p>
+                </div>
+
+                <div className="row" onMouseEnter={textEnter} onMouseLeave={textLeave}>
+                  <h6>Key Findings</h6>
+                  <div className="line"></div>
+                  <p>After conducting user interviews, the most prominent pain point emerged:
+                    <br></br>
+                    Lack of community feeling among students—Many students felt isolated in their learning journey,
+                    which
+                    negatively impacted motivation and engagement</p>
+                </div>
+
+                <h4 ref={caseStudy1IdeationRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>Ideation & Solution Design</h4>
+
+                <div className="pic-container">
+                  <img src={`${process.env.PUBLIC_URL + '/brainstorming.png'}`} alt="Brainstorming session notes for the community feature ideation"></img>
+                </div>
+
+                <h5 onMouseEnter={textEnter} onMouseLeave={textLeave}>Brainstorming</h5>
+
+                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>To generate solutions, I facilitated a
+                  brainstorming session with team members, including product
+                  managers, engineers, and designers. Key areas of focus included:</p>
+                <ul onMouseEnter={textEnter} onMouseLeave={textLeave}>
+                  <li>Collaboration & study groups</li>
+                  <li>Mentorship opportunities</li>
+                  <li>Job preparation support</li>
+                  <li>Progress tracking & engagement features</li>
+                </ul>
+                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Top ideas generated included:</p>
+                <ul onMouseEnter={textEnter} onMouseLeave={textLeave}>
+                  <li>Teammate search feature – Helps students find study partners</li>
+                  <li>Project showcase system – Allows students to share and discuss their work</li>
+                  <li>Alumni & partner mentorship system – Connects students with industry professionals</li>
+                  <li>Community-driven events – Organizing hackathons, study groups, and networking events</li>
+                </ul>
+
+                <h4 ref={caseStudy1PrototypingRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>Prototyping & Testing</h4>
+
+                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Before developing a full-fledged solution, I
+                  created low-fidelity wireframes to map out the key
+                  user
+                  flows and interactions. After iterating based on internal feedback, I refined them into
+                  high-fidelity
+                  prototypes for usability testing</p>
+
+                <div className="pic-container full">
+                  <img src={`${process.env.PUBLIC_URL + '/testing.png'}`} alt="High-fidelity prototype used for usability testing"></img>
+                </div>
+
+                <div className="row" onMouseEnter={textEnter} onMouseLeave={textLeave}>
+                  <h6>Usability Testing</h6>
+                  <div className="line"></div>
+                  <p>A moderated usability test with real users was conducted to validate design choices. Key takeaways
+                    included:</p>
+                  <ul>
+                    <li>A clearer user onboarding process for the new feature</li>
+                    <li>More intuitive navigation for finding study partners</li>
+                    <li>Better integration of the community aspect within the platform</li>
+                  </ul>
+                </div>
+
+                <h4 ref={caseStudy1MvpRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>MVP Launch – Fake Door Experiment</h4>
+
+                <div className="pic-container">
+                  <img src={`${process.env.PUBLIC_URL + '/fake-door.png'}`} alt="Fake door test screen for the teammate search feature"></img>
+                </div>
+
+                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>To test user interest in the teammate search
+                  feature, we implemented a Fake Door Test:</p>
+                <ul onMouseEnter={textEnter} onMouseLeave={textLeave}>
+                  <li>A simple student list was added to specific tasks</li>
+                  <li>A trackable button allowed users to explore potential study partners</li>
+                </ul>
+
+                <h5 onMouseEnter={textEnter} onMouseLeave={textLeave}>Results & Key Takeaways</h5>
+
+
+                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>40% of users engaged with the feature within a
+                  week. The strong engagement validated the need for a
+                  fully developed teammate search feature. Based on these insights, we proceeded with full
+                  development</p>
+
+                <h4 ref={caseStudy1ConclusionRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>Conclusion & Impact</h4>
+
+                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>By integrating community features into the studying
+                  platform, we addressed a critical engagement
+                  issue,
+                  helping students feel more connected in their learning journey.</p>
+                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Key Outcomes:</p>
+                <ul onMouseEnter={textEnter} onMouseLeave={textLeave}>
+                  <li>Higher student activity post-launch</li>
+                  <li>Increased peer collaboration and study group formation</li>
+                  <li>Positive user feedback on mentorship and networking opportunities</li>
+                </ul>
+
+                <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Next Steps & Future Improvements:</p>
+                <ul onMouseEnter={textEnter} onMouseLeave={textLeave}>
+                  <li>Refine the teammate search feature with filters and AI-driven suggestions</li>
+                  <li>Expand the mentorship program with structured events and industry partnerships</li>
+                  <li>Enhance gamification & progress tracking elements to boost long-term engagement</li>
+                </ul>
+                </div>
+                </div>
+                <button className={`case-toggle-btn ${expandedCases[3] ? 'is-open' : ''}`} onMouseEnter={linkEnter} onMouseLeave={textLeave}
+                        onClick={() => toggleCase(3)}>
+                  {expandedCases[3] ? 'Close case study' : 'Read case study'}
+                </button>
+              </div>
+
+            <div ref={projectsCardsDrift}>
               <ProjectsComponent textEnter={textEnter} linkEnter={linkEnter} textLeave={textLeave}/>
-            </ParallaxLayer>
+            </div>
 
-            <ParallaxLayer
-                offset={educationOffset}
-                speed={0.25}
-                factor={4}
-            >
+            <div ref={educationDrift}>
               <EducationComponent textEnter={textEnter} textLeave={textLeave}/>
-            </ParallaxLayer>
+            </div>
 
-            <ParallaxLayer
-                offset={byeOffset}
-                speed={0}
-                factor={4}>
+            <div ref={byeRef}>
               <ByeComponent textEnter={textEnter} textLeave={textLeave}/>
-            </ParallaxLayer>
+            </div>
 
-            <ParallaxLayer
-                offset={arrowOffset}
-                speed={0.1}>
-              <svg
-                  className='to-page-center arrow'
-                  width="38" height="103" viewBox="0 0 38 103" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                    d="M17.2322 101.768C18.2085 102.744 19.7915 102.744 20.7678 101.768L36.6777 85.8579C37.654 84.8816 37.654 83.2986 36.6777 82.3223C35.7014 81.346 34.1184 81.346 33.1421 82.3223L19 96.4645L4.85787 82.3223C3.88156 81.346 2.29864 81.346 1.32233 82.3223C0.346023 83.2986 0.346023 84.8816 1.32233 85.8579L17.2322 101.768ZM16.5 1.09278e-07L16.5 100L21.5 100L21.5 -1.09278e-07L16.5 1.09278e-07Z"
-                    fill="black"/>
-              </svg>
-            </ParallaxLayer>
-
-          </Parallax>
+          </div>
         </div>
       </>
   );

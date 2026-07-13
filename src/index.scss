@@ -22,6 +22,17 @@
     --additional-text-size-resp: 0.5rem;
 }
 
+html {
+    // Now that the page is real, natively-scrollable content (no longer a fixed-size
+    // parallax box), any element sized with 100vw (which includes the scrollbar gutter,
+    // unlike 100%) would otherwise create a few extra px of horizontal scroll. Scoped to
+    // just html (the element that owns the page scroll) -- setting this on body too made
+    // body implicitly overflow-y: auto as well (per the CSS overflow spec, hidden on one
+    // axis forces auto on the other when unset), turning it into a second, independent
+    // scroll container nested inside html's.
+    overflow-x: hidden;
+}
+
 body {
     margin: 0;
     font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Oxygen',
@@ -38,7 +49,6 @@ code {
 }
 
 ::-webkit-scrollbar {
-    width: 12px;
 }
 
 ::-webkit-scrollbar-thumb {

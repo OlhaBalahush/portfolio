@@ -30,13 +30,13 @@ const ProjectComponent: React.FC<ProjectComponentProps> = ({ textEnter, textLeav
                     </div>
                     {/*<div className='line'></div>*/}
                     <a className="project-content" href={`${link}`} onMouseEnter={linkEnter} onMouseLeave={textLeave} >
-                        <img src={`${pictureLink}`}></img>
+                        <img src={`${pictureLink}`} alt={`${name.split('_')[1]} project screenshot`}></img>
                     </a>
                 </div>
             ) : (
                 <div className="project-row">
                     <a className="project-content" href={`${link}`} onMouseEnter={linkEnter} onMouseLeave={textLeave}>
-                        <img src={`${pictureLink}`}></img>
+                        <img src={`${pictureLink}`} alt={`${name.split('_')[1]} project screenshot`}></img>
                     </a>
                     {/*<div className='line'></div>*/}
                     <div className='project-description'>

@@ -390,10 +390,8 @@ function App() {
                 </div>
 
                 <div className="pic-container prev full">
-                  <img src={`${process.env.PUBLIC_URL + '/community.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/community.png'}`} alt="Community feature integrated into the hybrid peer-to-peer studying platform"></img>
                 </div>
-
-                <h4 className='pr-num' ref={caseStudy1ResearchRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>01 Research Phase</h4>
 
                 <div className="row" onMouseEnter={textEnter} onMouseLeave={textLeave}>
                   <h6>Overview</h6>
@@ -410,7 +408,7 @@ function App() {
                 <h5 onMouseEnter={textEnter} onMouseLeave={textLeave}>User Interviews</h5>
 
                 <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/UR-summary.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/UR-summary.png'}`} alt="Summary of findings from student user interviews"></img>
                 </div>
 
                 <div className="row" onMouseEnter={textEnter} onMouseLeave={textLeave}>
@@ -447,7 +445,7 @@ function App() {
                 <h4 ref={caseStudy1IdeationRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>Ideation & Solution Design</h4>
 
                 <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/brainstorming.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/brainstorming.png'}`} alt="Brainstorming session notes for the community feature ideation"></img>
                 </div>
 
                 <h5 onMouseEnter={textEnter} onMouseLeave={textLeave}>Brainstorming</h5>
@@ -479,7 +477,7 @@ function App() {
                   prototypes for usability testing</p>
 
                 <div className="pic-container full">
-                  <img src={`${process.env.PUBLIC_URL + '/testing.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/testing.png'}`} alt="High-fidelity prototype used for usability testing"></img>
                 </div>
 
                 <div className="row" onMouseEnter={textEnter} onMouseLeave={textLeave}>
@@ -498,7 +496,7 @@ function App() {
                 <h4 ref={caseStudy1MvpRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>MVP Launch – Fake Door Experiment</h4>
 
                 <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/fake-door.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/fake-door.png'}`} alt="Fake door test screen for the teammate search feature"></img>
                 </div>
 
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>To test user interest in the teammate search
@@ -599,7 +597,7 @@ function App() {
                   it wasn't actually identifying the health of the batch or fulfilling their needs.</p>
 
                 <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/pacing.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/pacing.png'}`} alt="Pacing system screen showing student deadlines extending day by day"></img>
                 </div>
 
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>At this screen you can see how the pacing system
@@ -607,7 +605,7 @@ function App() {
                   out on tasks as long as possible.</p>
 
                 <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/pacing-student.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/pacing-student.png'}`} alt="Student view of the pacing system showing time left and deadline extensions"></img>
                 </div>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>At the students' view, they could see how much
                   time was left on the current assignment and encouraging points that could be received by completing
@@ -664,7 +662,7 @@ function App() {
                   implementation were mine to drive.</p>
 
                 <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/extensions-brainstorming.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/extensions-brainstorming.png'}`} alt="Opportunity Solution Tree brainstorming session mapping the extensions and warnings problem"></img>
                 </div>
 
                 <h4 ref={caseStudy2DecisionsRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>What decisions did we make along the way?</h4>
@@ -683,7 +681,7 @@ function App() {
                   Same information, same visibility, meaningfully less weight to carry around every day.</p>
 
                 <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/warnings.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/warnings.png'}`} alt="Redesigned warning indicator shown as a flag instead of a warning icon"></img>
                 </div>
 
                 <h5 onMouseEnter={textEnter} onMouseLeave={textLeave}>The notification channel</h5>
@@ -696,7 +694,7 @@ function App() {
                   time on the project ended.</p>
 
                 <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/notifications.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/notifications.png'}`} alt="Email notification sent to a student about a policy event"></img>
                 </div>
 
                 <h4 ref={caseStudy2TeamImpactRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>How did this change the team?</h4>
@@ -712,11 +710,11 @@ function App() {
                 {/*  TODO improve copy*/}
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Clear warnings view for admins. System that supports cohort health, so admins can see flags on students who needs support or cannot be at school, cause of violations already. Actional in details view for each students for better picture of violations, and flexible management in case of any mistake</p>
                 <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/flags-outcome.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/flags-outcome.png'}`} alt="Admin view of student warning flags and violation details"></img>
                 </div>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Automatic extensions, that reduces admins manual work on providing and managing them manuall. Now along with extensions automated warnings send along so admin don't have to manage it, but they see overview at the same time. System that supports cohort health, so admins can see flags on students who needs support or cannot be at school, cause of violations already.</p>
                 <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/extensions-output.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/extensions-output.png'}`} alt="Admin view of automatic extension management with accompanying warnings"></img>
                 </div>
 
                 <ul onMouseEnter={textEnter} onMouseLeave={textLeave}>
@@ -838,7 +836,7 @@ function App() {
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>How is the cohort actually doing?</p>
 
                 <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/cohort-current.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/cohort-current.png'}`} alt="Current admin flow for checking cohort progress, requiring many navigation steps"></img>
                 </div>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>To conclude in total I made at least 13 clicks. And this module was the easy case, since the deadline had already passed, so I didn't need to dig into individual topics like the admin do. For them, managing cohort health takes over 50 clicks. This one use case makes the scale of the navigation and architecture problem obvious.</p>
 
@@ -858,13 +856,13 @@ function App() {
                   flexible.</p>
 
                 <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/3rd-platform-johvi.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/3rd-platform-johvi.png'}`} alt="Reference screenshot of a third-party platform's cohort overview module"></img>
                 </div>
                 <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/design-cohort-1.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/design-cohort-1.png'}`} alt="First blank-slate version of the redesigned cohort overview"></img>
                 </div>
                 <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/design-cohort-1.1.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/design-cohort-1.1.png'}`} alt="First version of the redesigned cohort overview, alternate view"></img>
                 </div>
 
                 <h4 ref={caseStudyCohortTestingRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>What did the first round of testing tell us?</h4>
@@ -881,13 +879,13 @@ function App() {
                   version.</p>
 
                 <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/design-cohort-2.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/design-cohort-2.png'}`} alt="Improved cohort overview design after the first round of usability testing"></img>
                 </div>
                 <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/design-cohort-2.1.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/design-cohort-2.1.png'}`} alt="Improved cohort overview design, alternate view"></img>
                 </div>
                 <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/design-cohort-2.2.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/design-cohort-2.2.png'}`} alt="Improved cohort overview design, additional view"></img>
                 </div>
 
                 <h4 ref={caseStudyCohortStatusRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>Where this stands now</h4>
@@ -953,7 +951,7 @@ function App() {
                 </div>
 
                 <div className="pic-container full">
-                    <img src={`${process.env.PUBLIC_URL + '/ds-overview.png'}`}></img>
+                    <img src={`${process.env.PUBLIC_URL + '/ds-overview.png'}`} alt="Overview of inconsistencies across the product before the design system was introduced"></img>
                 </div>
 
                 <h4 ref={caseStudy3ProblemRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>What was going on for 3 years?</h4>
@@ -977,7 +975,7 @@ function App() {
                 <h4 ref={caseStudy3StartRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>Where did I start, and why?</h4>
 
                  <div className="pic-container full">
-                  <img src={`${process.env.PUBLIC_URL + '/ds-strategy.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/ds-strategy.png'}`} alt="Prioritization strategy for auditing the platform's design inconsistencies"></img>
                 </div>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>I went through the entire platform first,
                   cataloguing what actually existed, every token, every component, every recurring pattern. Rather
@@ -990,7 +988,7 @@ function App() {
                   wasn't the interesting part of the project, but it was the part everything else depended on.</p>
 
                 <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/tokens-colors.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/tokens-colors.png'}`} alt="Before-and-after comparison of the audited color tokens and contrast fixes"></img>
                 </div>
 
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Once tokens were settled and published, I moved
@@ -1000,7 +998,7 @@ function App() {
                   was still in use.</p>
 
                 <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/ds-struct.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/ds-struct.png'}`} alt="Structure of the design system's component library in Figma"></img>
                 </div>
 
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>Some of the messier inconsistencies weren't just
@@ -1017,7 +1015,7 @@ function App() {
                   all. A design system nobody enforces is just a suggestion; this one had teeth.</p>
 
                 <div className="pic-container">
-                  <img src={`${process.env.PUBLIC_URL + '/claude-skills.png'}`}></img>
+                  <img src={`${process.env.PUBLIC_URL + '/claude-skills.png'}`} alt="Code review flagging incorrect design system usage via an automated skill"></img>
                 </div>
 
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>It also changed what building something new

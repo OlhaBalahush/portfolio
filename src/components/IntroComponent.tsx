@@ -15,7 +15,7 @@ const IntroComponent: React.FC<IntroComponentProps> = ({ textEnter, textLeave })
                 <h1 onMouseEnter={textEnter} onMouseLeave={textLeave} className='title first-line'>Welcome, here!</h1>
                 <h1 onMouseEnter={textEnter} onMouseLeave={textLeave} className='title second-line'>I’m Olha Balahush</h1>
                 <div className="horizontal-line third-line"></div>
-                <span className="main-text third-line" onMouseEnter={textEnter} onMouseLeave={textLeave}>Product designer and engineer passionate about crafting solutions that solve real problems and provide a smooth experience</span>
+                <span className="main-text third-line" onMouseEnter={textEnter} onMouseLeave={textLeave}>I focus on people's problems, and craft solutions that fill the need and stick</span>
             </div>
         </div>
     )

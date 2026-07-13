@@ -4,11 +4,8 @@ import { motion, useMotionValue, useSpring, Variants } from 'framer-motion';
 import IntroComponent from './components/IntroComponent';
 import ContactMeComponent from './components/ContactMeComponent';
 import EducationComponent from './components/EducationComponent';
-import AboutTextComponent from './components/AboutTextcomponent'
-import SkillsComponent from './components/SkillsComponent';
 import ProjectsComponent from './components/ProjectsComponent';
 import ByeComponent from './components/LastPageComponent';
-import HeaderComponent from './components/HeaderComponent';
 import './components/project.scss'
 
 // The intro's entrance animation and the arrow reveals are timed from page load / scroll
@@ -36,29 +33,30 @@ function App() {
   const cursorY = useSpring(rawCursorY, { stiffness: 800, damping: 40, mass: 0.5 });
   const cursorOffsetRef = useRef(CURSOR_HALF_SIZE.default);
   const [cursorVariant, setCursorVariant] = useState('default');
+  // Custom cursor makes no sense on touch input -- there's no hovering pointer to
+  // track, and without continuous mousemove events it just sits stuck wherever the
+  // last synthetic tap landed. Detect real touch capability rather than viewport
+  // width, since a wide tablet or touchscreen laptop should still hide it.
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
 
   const CASE_STUDY_COUNT = 4;
 
-  const caseStudy1ResearchRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudy1IdeationRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudy1PrototypingRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudy1MvpRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudy1ConclusionRef = useRef<HTMLHeadingElement | null>(null);
-  const caseStudy2OverviewRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudy2ProblemRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudy2ProcessRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudy2DecisionsRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudy2TeamImpactRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudy2OutcomeRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudy2RetroRef = useRef<HTMLHeadingElement | null>(null);
-  const caseStudyCohortOverviewRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudyCohortSourceRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudyCohortNextRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudyCohortDesignRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudyCohortTestingRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudyCohortStatusRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudyCohortRetroRef = useRef<HTMLHeadingElement | null>(null);
-  const caseStudy3OverviewRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudy3ProblemRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudy3WhySoloRef = useRef<HTMLHeadingElement | null>(null);
   const caseStudy3StartRef = useRef<HTMLHeadingElement | null>(null);
@@ -86,7 +84,6 @@ function App() {
 
   const textEnter = () => setCursorVariant('text')
   const linkEnter = () => setCursorVariant('link')
-  const iconEnter = () => setCursorVariant('iconWithText')
   const textLeave = () => setCursorVariant('default')
 
   useLayoutEffect(() => {
@@ -98,6 +95,18 @@ function App() {
   }, [cursorVariant]);
 
   useEffect(() => {
+    const touchQuery = window.matchMedia('(hover: none), (pointer: coarse)');
+    const hasTouchSupport = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    const updateIsTouchDevice = () => setIsTouchDevice(touchQuery.matches || hasTouchSupport);
+
+    updateIsTouchDevice();
+    touchQuery.addEventListener('change', updateIsTouchDevice);
+    return () => touchQuery.removeEventListener('change', updateIsTouchDevice);
+  }, []);
+
+  useEffect(() => {
+    if (isTouchDevice) return;
+
     // Position the cursor dot directly via motion values instead of React state, so
     // tracking the mouse doesn't re-render the whole (large) App tree on every pixel
     // of movement -- that was the source of the visible lag/jank.
@@ -110,7 +119,7 @@ function App() {
     return () => {
       window.removeEventListener('mousemove', mouseMove);
     };
-  }, [rawCursorX, rawCursorY]);
+  }, [rawCursorX, rawCursorY, isTouchDevice]);
 
   useEffect(() => {
     // Disable scroll
@@ -183,21 +192,23 @@ function App() {
   // @ts-ignore
     return (
       <>
-        <motion.div
-            className='cursor'
-            variants={cursorVariants}
-            animate={cursorVariant}
-            style={{
-              position: 'fixed',
-              pointerEvents: 'none',
-              zIndex: 9999,
-              x: cursorX,
-              y: cursorY,
-            }}
-        >
-          {cursorVariant === 'link' && (
-              <span>Click Here</span> // Text displayed when in 'link' state
-          )} </motion.div>
+        {!isTouchDevice && (
+            <motion.div
+                className='cursor'
+                variants={cursorVariants}
+                animate={cursorVariant}
+                style={{
+                  position: 'fixed',
+                  pointerEvents: 'none',
+                  zIndex: 9999,
+                  x: cursorX,
+                  y: cursorY,
+                }}
+            >
+              {cursorVariant === 'link' && (
+                  <span>Click Here</span> // Text displayed when in 'link' state
+              )} </motion.div>
+        )}
         <ContactMeComponent linkEnter={linkEnter} textLeave={textLeave}/>
 
         <header className="glassmorphism">
@@ -241,7 +252,7 @@ function App() {
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  position: "absolute",
+                  position: "fixed",
                   top: "60px",
                   right: "5%",
                   width: "160px",

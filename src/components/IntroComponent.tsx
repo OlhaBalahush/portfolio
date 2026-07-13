@@ -1,7 +1,5 @@
-import { color, motion } from 'framer-motion';
 import './basic.scss'
 import './intro.scss'
-import {useEffect, useState} from "react";
 import { useDrift } from '../hooks/useDrift';
 
 interface IntroComponentProps {

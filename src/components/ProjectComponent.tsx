@@ -1,8 +1,6 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import './basic.scss'
 import './project.scss'
-
-import { motion } from "framer-motion";
 
 interface ProjectComponentProps {
     textEnter: () => void;

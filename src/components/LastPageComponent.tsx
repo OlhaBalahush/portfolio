@@ -1,9 +1,7 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import './basic.scss'
 import './lastPage.scss'
 
-import { motion } from "framer-motion";
-import ProjectComponent from './ProjectComponent';
 import { useRevealOnView } from '../hooks/useRevealOnView';
 import { useDrift } from '../hooks/useDrift';
 

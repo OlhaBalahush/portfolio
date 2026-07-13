@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import './basic.scss'
 import './projects.scss'
 // import logo from './logo.png';

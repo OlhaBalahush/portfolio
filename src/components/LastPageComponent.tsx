@@ -12,14 +12,14 @@ interface ByeComponentProps {
 
 const ByeComponent: React.FC<ByeComponentProps> = ({ textEnter, textLeave }) => {
     const arrowReveal = useRevealOnView<HTMLDivElement>();
-    const arrowDrift = useDrift<HTMLDivElement>(0.1);
+    const arrowDrift = useDrift<HTMLDivElement>(-0.4);
 
     return (
         <div className="page center">
             <h1 onMouseEnter={textEnter} onMouseLeave={textLeave} className='title'>Thank you!</h1>
             <p style={{ margin: 0 }}>Find me here</p>
-            <div className="scroll-cue-arrow-slot" ref={arrowDrift}>
-                <div className={`scroll-cue-arrow--on-view ${arrowReveal.isVisible ? 'is-visible' : ''}`} ref={arrowReveal.ref}>
+            <div className="scroll-cue-arrow-slot bye-arrow-slot" ref={arrowDrift}>
+                <div className={`${arrowReveal.isVisible ? 'is-visible' : ''}`} ref={arrowReveal.ref}>
                     <svg
                         className='to-page-center arrow'
                         width="38" height="103" viewBox="0 0 38 103" fill="none" xmlns="http://www.w3.org/2000/svg">

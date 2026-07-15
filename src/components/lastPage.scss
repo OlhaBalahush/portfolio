@@ -5,3 +5,11 @@
     flex-direction: column;
     color: black; // to delete
 }
+
+.bye-arrow-slot {
+    margin-top: -3rem;
+
+    @media (min-width: 992px) {
+        margin-top: -5rem;
+    }
+}

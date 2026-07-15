@@ -8,7 +8,7 @@ interface IntroComponentProps {
 }
 
 const IntroComponent: React.FC<IntroComponentProps> = ({ textEnter, textLeave }) => {
-    const arrowDrift = useDrift<HTMLDivElement>(0.05);
+    const arrowDrift = useDrift<HTMLDivElement>(-0.2);
 
     return (
         <div className="page page-height">

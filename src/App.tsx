@@ -67,9 +67,6 @@ function App() {
   const [expandedCases, setExpandedCases] = useState<boolean[]>(
       () => Array(CASE_STUDY_COUNT).fill(false)
   );
-  const toggleCase = (i: number) => {
-    setExpandedCases(prev => prev.map((v, idx) => (idx === i ? !v : v)));
-  };
 
   // Normal document flow, so a nav click just scrolls the targeted section into view (no
   // page-offset math needed). The drift-effect sections reuse their drift ref as the nav
@@ -80,6 +77,52 @@ function App() {
   const projectsCardsDrift = useRef<HTMLDivElement>(null);
   const educationDrift = useRef<HTMLDivElement>(null);
   const byeRef = useRef<HTMLDivElement>(null);
+
+  // Anchor for the scroll-on-close below: each case's toggle button/container, so closing
+  // can keep the button roughly where it already was on screen instead of recentering on
+  // the whole (now much shorter) section.
+  const caseToggleRefs = useRef<Array<HTMLDivElement | null>>([]);
+
+  // Animating grid-template-rows straight to 1fr forces the browser to keep re-measuring
+  // the article's intrinsic content height on every animation frame, which is what made
+  // the expand/collapse feel laggy on long case studies. Measuring the content height once
+  // up front and transitioning to that fixed pixel value (via --case-height) avoids the
+  // per-frame remeasurement.
+  const caseDetailsRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const caseDetailsInnerRefs = useRef<Array<HTMLDivElement | null>>([]);
+
+  const toggleCase = (i: number) => {
+    const wasOpen = expandedCases[i];
+    if (!wasOpen) {
+      const outer = caseDetailsRefs.current[i];
+      const inner = caseDetailsInnerRefs.current[i];
+      if (outer && inner) {
+        outer.style.setProperty('--case-height', `${inner.scrollHeight}px`);
+      }
+    }
+    setExpandedCases(prev => prev.map((v, idx) => (idx === i ? !v : v)));
+    // Closing collapses a potentially long article back down, which otherwise strands
+    // the viewport wherever it happened to be scrolled. Anchor on the toggle button itself
+    // (block: 'end' keeps it at the bottom of the viewport, close to where it already sat
+    // while sticky) rather than recentering the whole section, so the screen doesn't jump
+    // to the case's title -- it stays roughly where the reader already was. Waiting for the
+    // actual transitionend (rather than a fixed delay guessing at .case-details' 0.5s
+    // grid-template-rows transition in app.scss) avoids scrolling to a stale, pre-collapse
+    // position if the browser takes a touch longer to settle.
+    if (wasOpen) {
+      const detailsEl = caseDetailsRefs.current[i];
+      const scrollToButton = (e?: TransitionEvent) => {
+        if (e && e.propertyName !== 'grid-template-rows') return;
+        detailsEl?.removeEventListener('transitionend', scrollToButton);
+        caseToggleRefs.current[i]?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+      };
+      if (detailsEl) {
+        detailsEl.addEventListener('transitionend', scrollToButton);
+      } else {
+        scrollToButton();
+      }
+    }
+  };
 
 
   const textEnter = () => setCursorVariant('text')
@@ -326,9 +369,9 @@ function App() {
                     research, a brainstorming session, and with the team we shipped an MVP that cut down the manual
                     work admins were doing.</p>
 
-                <div className={`case-details ${expandedCases[0] ? 'is-open' : ''}`}>
+                <div className={`case-details ${expandedCases[0] ? 'is-open' : ''}`} ref={el => { caseDetailsRefs.current[0] = el; }}>
                 <div className="case-fade"></div>
-                <div className="case-details-inner">
+                <div className="case-details-inner" ref={el => { caseDetailsInnerRefs.current[0] = el; }}>
 
                 <h4 ref={caseStudy2ProblemRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>What problem did we face?</h4>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>During my 2 years work at the startup, we once
@@ -485,10 +528,12 @@ function App() {
                 </ol>
                 </div>
                 </div>
-                <button className={`case-toggle-btn ${expandedCases[0] ? 'is-open' : ''}`} onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                        onClick={() => toggleCase(0)}>
-                  {expandedCases[0] ? 'Close case study' : 'Read case study'}
-                </button>
+                <div className={`case-toggle-container ${expandedCases[0] ? 'is-sticky' : ''}`} ref={el => { caseToggleRefs.current[0] = el; }}>
+                  <button className={`case-toggle-btn ${expandedCases[0] ? 'is-open' : ''}`} onMouseEnter={linkEnter} onMouseLeave={textLeave}
+                          onClick={() => toggleCase(0)}>
+                    {expandedCases[0] ? 'Close case' : 'Read case'}
+                  </button>
+                </div>
               </div>
 
             <div className="page ux-cases-page">
@@ -528,9 +573,9 @@ function App() {
                     all clients, ran a first round of usability testing on a redesigned cohort overview, and the
                     project is continuing toward MVP development.</p>
 
-                <div className={`case-details ${expandedCases[1] ? 'is-open' : ''}`}>
+                <div className={`case-details ${expandedCases[1] ? 'is-open' : ''}`} ref={el => { caseDetailsRefs.current[1] = el; }}>
                 <div className="case-fade"></div>
-                <div className="case-details-inner">
+                <div className="case-details-inner" ref={el => { caseDetailsInnerRefs.current[1] = el; }}>
 
                 <h4 ref={caseStudyCohortSourceRef} onMouseEnter={textEnter} onMouseLeave={textLeave}>Where did the problem come from?</h4>
                 <p onMouseEnter={textEnter} onMouseLeave={textLeave}>The starting signal was NPS. Admins kept saying
@@ -647,10 +692,12 @@ function App() {
                   the same issues faster, with less invested in a direction before I knew whether it was right.</p>
                 </div>
                 </div>
-                <button className={`case-toggle-btn ${expandedCases[1] ? 'is-open' : ''}`} onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                        onClick={() => toggleCase(1)}>
-                  {expandedCases[1] ? 'Close case study' : 'Read case study'}
-                </button>
+                <div className={`case-toggle-container ${expandedCases[1] ? 'is-sticky' : ''}`} ref={el => { caseToggleRefs.current[1] = el; }}>
+                  <button className={`case-toggle-btn ${expandedCases[1] ? 'is-open' : ''}`} onMouseEnter={linkEnter} onMouseLeave={textLeave}
+                          onClick={() => toggleCase(1)}>
+                    {expandedCases[1] ? 'Close case' : 'Read case'}
+                  </button>
+                </div>
               </div>
 
             <div className="page ux-cases-page">
@@ -689,9 +736,9 @@ function App() {
                     system into an automated check inside the codebase itself, so it didn't just sit in Figma waiting
                     to be ignored.</p>
 
-                <div className={`case-details ${expandedCases[2] ? 'is-open' : ''}`}>
+                <div className={`case-details ${expandedCases[2] ? 'is-open' : ''}`} ref={el => { caseDetailsRefs.current[2] = el; }}>
                 <div className="case-fade"></div>
-                <div className="case-details-inner">
+                <div className="case-details-inner" ref={el => { caseDetailsInnerRefs.current[2] = el; }}>
 
                 {/*<div className="pic-container full">*/}
                 {/*    <img src={`${process.env.PUBLIC_URL + '/ds-overview.png'}`} alt="Overview of inconsistencies across the product before the design system was introduced"></img>*/}
@@ -791,10 +838,12 @@ function App() {
                   inconsistency after it's already baked into a live product used by real clients.</p>
                 </div>
                 </div>
-                <button className={`case-toggle-btn ${expandedCases[2] ? 'is-open' : ''}`} onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                        onClick={() => toggleCase(2)}>
-                  {expandedCases[2] ? 'Close case study' : 'Read case study'}
-                </button>
+                <div className={`case-toggle-container ${expandedCases[2] ? 'is-sticky' : ''}`} ref={el => { caseToggleRefs.current[2] = el; }}>
+                  <button className={`case-toggle-btn ${expandedCases[2] ? 'is-open' : ''}`} onMouseEnter={linkEnter} onMouseLeave={textLeave}
+                          onClick={() => toggleCase(2)}>
+                    {expandedCases[2] ? 'Close case' : 'Read case'}
+                  </button>
+                </div>
               </div>
 
             <div className="page ux-cases-page">
@@ -831,9 +880,9 @@ function App() {
                     that
                     required further exploration through user interviews</p>
 
-                <div className={`case-details ${expandedCases[3] ? 'is-open' : ''}`}>
+                <div className={`case-details ${expandedCases[3] ? 'is-open' : ''}`} ref={el => { caseDetailsRefs.current[3] = el; }}>
                 <div className="case-fade"></div>
-                <div className="case-details-inner">
+                <div className="case-details-inner" ref={el => { caseDetailsInnerRefs.current[3] = el; }}>
 
                 <h5 onMouseEnter={textEnter} onMouseLeave={textLeave}>User Interviews</h5>
 
@@ -961,10 +1010,12 @@ function App() {
                 </ul>
                 </div>
                 </div>
-                <button className={`case-toggle-btn ${expandedCases[3] ? 'is-open' : ''}`} onMouseEnter={linkEnter} onMouseLeave={textLeave}
-                        onClick={() => toggleCase(3)}>
-                  {expandedCases[3] ? 'Close case study' : 'Read case study'}
-                </button>
+                <div className={`case-toggle-container ${expandedCases[3] ? 'is-sticky' : ''}`} ref={el => { caseToggleRefs.current[3] = el; }}>
+                  <button className={`case-toggle-btn ${expandedCases[3] ? 'is-open' : ''}`} onMouseEnter={linkEnter} onMouseLeave={textLeave}
+                          onClick={() => toggleCase(3)}>
+                    {expandedCases[3] ? 'Close case' : 'Read case'}
+                  </button>
+                </div>
               </div>
 
             <div ref={projectsCardsDrift}>

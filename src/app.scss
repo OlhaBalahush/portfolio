@@ -171,7 +171,7 @@
 }
 
 .case-details.is-open {
-    grid-template-rows: 1fr;
+    grid-template-rows: var(--case-height, 1fr);
 }
 
 .case-details-inner {
@@ -193,6 +193,28 @@
 
 .case-details.is-open .case-fade {
     opacity: 0;
+}
+
+.case-toggle-container {
+    // The "contact me" ticker (contact.scss) is fixed at the bottom of every screen and
+    // peeks in ~28px regardless of scroll position. Reserve clearance so scrollIntoView's
+    // block: 'end' (used to keep this button in place when a case closes) doesn't land
+    // the button flush against the viewport edge, right under that ticker.
+    scroll-margin-bottom: 3rem;
+}
+
+.case-toggle-container.is-sticky {
+    position: sticky;
+    bottom: 1.5rem;
+    z-index: 10;
+    width: 100%;
+    padding: 1rem 0 ;
+    background: linear-gradient(to top, var(--back-color) 65%, transparent);
+}
+
+.case-toggle-container.is-sticky .case-toggle-btn {
+    margin: 0.75rem 0 0 0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
 }
 
 button{
@@ -376,18 +398,6 @@ p, span, ul, button {
     opacity: 0;
     animation: slideInDown 1s ease-out forwards;
     animation-delay: 5s;
-}
-
-// Same slideInDown entrance, but played when the element is scrolled into view (see
-// useRevealOnView) rather than on a fixed page-load delay -- for arrows far below the
-// fold, where a fixed delay would have already elapsed before anyone scrolls there.
-.scroll-cue-arrow--on-view {
-    opacity: 0;
-    transform: translateY(-50px);
-}
-
-.scroll-cue-arrow--on-view.is-visible {
-    animation: slideInDown 1s ease-out forwards;
 }
 .span-btn {
     position: relative;
